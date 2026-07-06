@@ -89,19 +89,28 @@ hr{
     color:var(--ink) !important;
 }
 
-.stButton button{
-    font-family:'Inter', sans-serif;
-    font-weight:600;
-    border-radius:3px;
-    border:1.5px solid var(--brick);
-    background:var(--brick);
-    color:#FDF9F3;
+.stButton button,
+.stButton button:focus,
+.stButton button:visited,
+.stButton button p{
+    font-family:'Inter', sans-serif !important;
+    font-weight:600 !important;
+    border-radius:3px !important;
+    border:1.5px solid var(--brick) !important;
+    background:var(--brick) !important;
+    color:#FFFFFF !important;
     transition:all 0.15s ease;
 }
-.stButton button:hover{
-    background:#6E3A2E;
-    border-color:#6E3A2E;
-    color:#FDF9F3;
+.stButton button:hover,
+.stButton button:hover p{
+    background:#6E3A2E !important;
+    border-color:#6E3A2E !important;
+    color:#FFFFFF !important;
+}
+.stButton button:active,
+.stButton button:active p{
+    background:#5A2F25 !important;
+    color:#FFFFFF !important;
 }
 
 [data-testid="stAlert"]{
