@@ -1,13 +1,3 @@
-"""
-app.py
-------
-Streamlit web frontend for the AI Tutor App.
-Run with:  streamlit run app.py
-
-This file only handles UI/interaction. All AI logic lives in tutor_logic.py
-(separation of concerns / modular code, as required by the lab guide).
-"""
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -15,23 +5,207 @@ import plotly.graph_objects as go
 
 import tutor_logic as tl
 
-# ---------------------------------------------------------------------------
-# PAGE CONFIG
-# ---------------------------------------------------------------------------
-st.set_page_config(page_title="AI Tutor", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="Office Hours — AI Tutor", page_icon="§", layout="wide")
 
-st.title("🎓 AI Tutor — Personalized Study Recommendations")
-st.caption("Rule-based scoring + KMeans clustering to find which subject needs your attention most.")
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
 
-COLOR_MAP = {"Weak": "#E74C3C", "Medium": "#F5B041", "Strong": "#58D68D"}
+:root{
+    --paper:#F6F1E7;
+    --card:#FFFDF8;
+    --ink:#1C1B19;
+    --ink-soft:#4A4742;
+    --ink-faint:#8C877D;
+    --rule:#DDD5C4;
+    --brick:#8B4A3B;
+    --weak:#A8452F;
+    --weak-bg:#F6E3DD;
+    --medium:#96692A;
+    --medium-bg:#F4EAD6;
+    --strong:#3E6B4E;
+    --strong-bg:#E4EEE3;
+}
 
-# ---------------------------------------------------------------------------
-# SIDEBAR — INPUT METHOD
-# ---------------------------------------------------------------------------
-st.sidebar.header("1. Provide Your Data")
+html, body, [class*="css"]{
+    font-family:'Inter', sans-serif;
+}
+
+.stApp{
+    background:var(--paper);
+}
+
+section[data-testid="stSidebar"]{
+    background:var(--card);
+    border-right:1px solid var(--rule);
+}
+section[data-testid="stSidebar"] .stMarkdown h2,
+section[data-testid="stSidebar"] .stMarkdown h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    color:var(--ink);
+}
+
+h1{
+    font-family:'Fraunces', serif !important;
+    font-weight:500 !important;
+    color:var(--ink) !important;
+    letter-spacing:-0.01em;
+}
+h2, h3{
+    font-family:'Fraunces', serif !important;
+    font-weight:500 !important;
+    color:var(--ink) !important;
+}
+
+[data-testid="stCaptionContainer"]{
+    color:var(--ink-faint) !important;
+    font-size:14px !important;
+}
+
+p, li, span, label{
+    color:var(--ink-soft);
+}
+
+hr{
+    border-color:var(--rule) !important;
+    margin:2rem 0 !important;
+}
+
+[data-testid="stMetric"]{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    padding:14px 18px;
+}
+[data-testid="stMetricLabel"]{
+    color:var(--ink-faint) !important;
+    font-size:12px !important;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+}
+[data-testid="stMetricValue"]{
+    font-family:'Fraunces', serif !important;
+    color:var(--ink) !important;
+}
+
+.stButton button{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    border-radius:3px;
+    border:1.5px solid var(--brick);
+    background:var(--brick);
+    color:#FDF9F3;
+    transition:all 0.15s ease;
+}
+.stButton button:hover{
+    background:#6E3A2E;
+    border-color:#6E3A2E;
+    color:#FDF9F3;
+}
+
+[data-testid="stAlert"]{
+    border-radius:6px;
+    border:1px solid var(--rule);
+    font-family:'Inter', sans-serif;
+}
+
+[data-testid="stDataFrame"]{
+    border:1px solid var(--rule);
+    border-radius:6px;
+}
+
+section[data-testid="stSidebar"] .stRadio label{
+    font-family:'Inter', sans-serif;
+    color:var(--ink-soft);
+}
+
+.stSlider label{
+    color:var(--ink-soft) !important;
+    font-size:13px;
+}
+
+[data-testid="stExpander"]{
+    border:1px solid var(--rule);
+    border-radius:6px;
+    background:var(--card);
+}
+
+.verdict-box{
+    background:var(--ink);
+    color:#F4F1EA;
+    padding:28px 32px;
+    border-radius:8px;
+    margin-bottom:8px;
+}
+.verdict-kicker{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#C99A8A;
+    margin-bottom:12px;
+}
+.verdict-title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:26px;
+    line-height:1.35;
+    margin-bottom:14px;
+}
+.verdict-title em{
+    font-style:italic;
+    color:#E8B8A4;
+}
+.verdict-body{
+    font-size:14.5px;
+    line-height:1.65;
+    color:#D8D5CC;
+    max-width:640px;
+}
+
+.practice-row{
+    display:flex;
+    gap:12px;
+    padding:10px 0;
+    border-bottom:1px solid var(--rule);
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.5;
+}
+.practice-row:last-child{ border-bottom:none; }
+.practice-num{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    color:var(--brick);
+    flex-shrink:0;
+}
+
+.method-note{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+}
+</style>
+""", unsafe_allow_html=True)
+
+COLOR_MAP = {"Weak": "#A8452F", "Medium": "#96692A", "Strong": "#3E6B4E"}
+PLOTLY_TEMPLATE = dict(
+    plot_bgcolor="#FFFDF8",
+    paper_bgcolor="#FFFDF8",
+    font=dict(family="Inter, sans-serif", color="#1C1B19"),
+)
+
+st.markdown('<div style="font-size:12px; font-weight:600; letter-spacing:0.08em; '
+            'text-transform:uppercase; color:#8B4A3B; margin-bottom:6px;">office hours</div>',
+            unsafe_allow_html=True)
+st.title("Your AI Study Mentor")
+st.caption("Rule-based scoring + K-means clustering — tells you which subject needs your attention most, and why.")
+
+st.sidebar.header("Your marksheet")
 
 input_method = st.sidebar.radio(
-    "How do you want to enter your marksheet?",
+    "How do you want to enter your subjects?",
     ["Use Demo Data", "Upload CSV", "Enter Manually"],
 )
 
@@ -39,7 +213,7 @@ df_input = None
 
 if input_method == "Use Demo Data":
     df_input = tl.load_data("data/student_data.csv")
-    st.sidebar.success("Demo data loaded (5 sample subjects).")
+    st.sidebar.success("Demo data loaded — 5 sample subjects.")
 
 elif input_method == "Upload CSV":
     uploaded_file = st.sidebar.file_uploader(
@@ -55,7 +229,7 @@ elif input_method == "Upload CSV":
             st.sidebar.error(f"Could not read file: {e}")
 
 elif input_method == "Enter Manually":
-    st.sidebar.write("Add your subjects below (edit the table in the main panel).")
+    st.sidebar.write("Add your subjects in the table on the right.")
     if "manual_df" not in st.session_state:
         st.session_state.manual_df = pd.DataFrame({
             "subject": ["Math", "Physics", "English"],
@@ -65,19 +239,13 @@ elif input_method == "Enter Manually":
         })
     df_input = st.session_state.manual_df
 
-# ---------------------------------------------------------------------------
-# SIDEBAR — PARAMETERS
-# ---------------------------------------------------------------------------
-st.sidebar.header("2. Settings")
-weak_threshold = st.sidebar.slider("Weak score threshold (%)", 0, 100, 60)
-weak_fraction = st.sidebar.slider("Fraction of subjects considered 'weak' for evaluation", 0.1, 0.8, 0.4)
+st.sidebar.header("Settings")
+weak_threshold = st.sidebar.slider("Where should \"weak\" start?", 0, 100, 60, help="Scores below this line are treated as struggling.")
+weak_fraction = st.sidebar.slider("Fraction flagged weak (rule-based)", 0.1, 0.8, 0.4, help="Used only for the evaluation comparison below.")
 
-run_button = st.sidebar.button("🚀 Analyse My Subjects", type="primary")
+run_button = st.sidebar.button("Ask for my recommendation", type="primary", use_container_width=True)
 
-# ---------------------------------------------------------------------------
-# MAIN PANEL — EDITABLE TABLE (for manual entry mode)
-# ---------------------------------------------------------------------------
-st.subheader("📋 Your Marksheet")
+st.subheader("Your marksheet")
 
 if input_method == "Enter Manually":
     edited_df = st.data_editor(
@@ -85,143 +253,143 @@ if input_method == "Enter Manually":
         num_rows="dynamic",
         use_container_width=True,
         column_config={
-            "quiz_score": st.column_config.NumberColumn("Quiz Score (%)", min_value=0, max_value=100),
-            "hours_studied": st.column_config.NumberColumn("Hours Studied", min_value=0.0),
+            "quiz_score": st.column_config.NumberColumn("Quiz score (%)", min_value=0, max_value=100),
+            "hours_studied": st.column_config.NumberColumn("Hours studied", min_value=0.0),
             "attempts": st.column_config.NumberColumn("Attempts", min_value=1, step=1),
         },
     )
     st.session_state.manual_df = edited_df
     df_input = edited_df
 elif df_input is not None:
-    st.dataframe(df_input, use_container_width=True)
+    st.dataframe(df_input, use_container_width=True, hide_index=True)
 else:
-    st.info("👈 Choose an input method from the sidebar to get started.")
+    st.info("Choose an input method from the sidebar to get started.")
 
-# ---------------------------------------------------------------------------
-# RUN PIPELINE
-# ---------------------------------------------------------------------------
 if run_button:
     if df_input is None or df_input.empty:
-        st.error("⚠️ No data available. Please upload, load demo data, or enter subjects manually.")
+        st.error("No data available. Please upload, load demo data, or enter subjects manually.")
     else:
         errors = tl.validate_data(df_input)
         if errors:
-            st.error("⚠️ Please fix the following issues:")
+            st.error("Please fix the following before continuing:")
             for e in errors:
                 st.write(f"- {e}")
         else:
-            with st.spinner("Analysing your subjects..."):
+            with st.spinner("Reading through your subjects..."):
                 result = tl.run_full_pipeline(df_input)
 
             df_ranked = result["df_ranked"]
             top = result["top_subject"]
             evaluation = result["evaluation"]
 
-            st.success("Analysis complete!")
-
-            # -----------------------------------------------------------------
-            # RESULT PANEL
-            # -----------------------------------------------------------------
             st.markdown("---")
-            st.subheader("🎯 Recommendation")
+            st.markdown(f"""
+            <div class="verdict-box">
+                <div class="verdict-kicker">my read on things</div>
+                <div class="verdict-title">You should put your next session into <em>{top['subject']}</em>.</div>
+                <div class="verdict-body">{result['explanation']}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                st.metric("Priority Subject", top["subject"])
-                st.metric("Quiz Score", f"{top['quiz_score']:.0f}%")
-                st.metric("Performance Level", top["performance_level"])
-            with col2:
-                st.info(result["explanation"])
-                st.markdown("**Suggested Practice:**")
-                for q in result["questions"]:
-                    st.write(f"- {q}")
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("Score", f"{top['quiz_score']:.0f}%")
+            col2.metric("Attempts", int(top["attempts"]))
+            col3.metric("Hours studied", f"{top['hours_studied']:.1f}h")
+            col4.metric("Priority", f"{top['priority_score']}")
 
-            # -----------------------------------------------------------------
-            # VISUAL 1: Priority score bar chart
-            # -----------------------------------------------------------------
             st.markdown("---")
-            st.subheader("📊 Subject Priority Ranking")
-
-            fig1 = px.bar(
-                df_ranked, x="subject", y="priority_score",
-                color="performance_level", color_discrete_map=COLOR_MAP,
-                text="priority_score",
-                labels={"priority_score": "Priority Score", "subject": "Subject"},
-                title="Higher score = needs more attention",
+            st.subheader("Where to start")
+            practice_html = "".join(
+                f'<div class="practice-row"><span class="practice-num">{i+1}</span><span>{q}</span></div>'
+                for i, q in enumerate(result["questions"])
             )
-            fig1.update_traces(textposition="outside")
-            st.plotly_chart(fig1, use_container_width=True)
+            st.markdown(practice_html, unsafe_allow_html=True)
 
-            # -----------------------------------------------------------------
-            # VISUAL 2: Quiz scores with threshold line
-            # -----------------------------------------------------------------
-            col3, col4 = st.columns(2)
+            st.markdown("---")
+            st.subheader("Everything, ranked")
+            display_df = df_ranked[[
+                "subject", "quiz_score", "hours_studied", "attempts",
+                "priority_score", "performance_level"
+            ]].rename(columns={
+                "subject": "Subject",
+                "quiz_score": "Score (%)",
+                "hours_studied": "Hours studied",
+                "attempts": "Attempts",
+                "priority_score": "Priority",
+                "performance_level": "Level",
+            })
+            st.dataframe(
+                display_df.style.apply(
+                    lambda row: [f"background-color: {COLOR_MAP[row['Level']]}22"] * len(row),
+                    axis=1,
+                ),
+                use_container_width=True,
+                hide_index=True,
+            )
 
-            with col3:
-                fig2 = px.bar(
-                    df_ranked, x="subject", y="quiz_score",
+            st.markdown("---")
+            st.subheader("The shape of it")
+
+            chart_col1, chart_col2 = st.columns([1.3, 1])
+
+            with chart_col1:
+                fig1 = px.bar(
+                    df_ranked, x="subject", y="priority_score",
                     color="performance_level", color_discrete_map=COLOR_MAP,
-                    labels={"quiz_score": "Quiz Score (%)"},
-                    title="Quiz Scores by Subject",
+                    text="priority_score",
+                    labels={"priority_score": "Priority score", "subject": ""},
                 )
-                fig2.add_hline(y=weak_threshold, line_dash="dash", line_color="red",
-                                annotation_text=f"Weak threshold ({weak_threshold}%)")
-                fig2.update_yaxes(range=[0, 100])
-                st.plotly_chart(fig2, use_container_width=True)
+                fig1.update_traces(textposition="outside")
+                fig1.update_layout(**PLOTLY_TEMPLATE, showlegend=True, legend_title_text="",
+                                    title=dict(text="Priority ranking", font=dict(family="Fraunces, serif", size=16)))
+                st.plotly_chart(fig1, use_container_width=True)
 
-            # -----------------------------------------------------------------
-            # VISUAL 3: Performance level pie chart
-            # -----------------------------------------------------------------
-            with col4:
+            with chart_col2:
                 level_counts = df_ranked["performance_level"].value_counts().reset_index()
                 level_counts.columns = ["performance_level", "count"]
                 fig3 = px.pie(
                     level_counts, names="performance_level", values="count",
                     color="performance_level", color_discrete_map=COLOR_MAP,
-                    title="Distribution of Performance Levels",
+                    hole=0.45,
                 )
+                fig3.update_layout(**PLOTLY_TEMPLATE, showlegend=True,
+                                    title=dict(text="Distribution", font=dict(family="Fraunces, serif", size=16)))
                 st.plotly_chart(fig3, use_container_width=True)
 
-            # -----------------------------------------------------------------
-            # FULL RANKED TABLE
-            # -----------------------------------------------------------------
-            st.markdown("---")
-            st.subheader("📄 Full Ranked Table")
-            display_df = df_ranked[[
-                "subject", "quiz_score", "hours_studied", "attempts",
-                "priority_score", "performance_level"
-            ]]
-            st.dataframe(
-                display_df.style.apply(
-                    lambda row: [f"background-color: {COLOR_MAP[row['performance_level']]}33"] * len(row),
-                    axis=1,
-                ),
-                use_container_width=True,
+            fig2 = px.bar(
+                df_ranked, x="subject", y="quiz_score",
+                color="performance_level", color_discrete_map=COLOR_MAP,
+                labels={"quiz_score": "Quiz score (%)", "subject": ""},
             )
+            fig2.add_hline(y=weak_threshold, line_dash="dash", line_color="#A8452F",
+                            annotation_text=f"weak threshold ({weak_threshold}%)")
+            fig2.update_yaxes(range=[0, 100])
+            fig2.update_layout(**PLOTLY_TEMPLATE, showlegend=True, legend_title_text="",
+                                title=dict(text="Quiz scores by subject", font=dict(family="Fraunces, serif", size=16)))
+            st.plotly_chart(fig2, use_container_width=True)
 
-            # -----------------------------------------------------------------
-            # EVALUATION PANEL
-            # -----------------------------------------------------------------
             st.markdown("---")
-            st.subheader("✅ Evaluation — Rule-Based vs Machine Learning")
+            st.subheader("How sure am I")
 
             ecol1, ecol2, ecol3 = st.columns(3)
-            ecol1.metric("Rule-Based Flagged Weak", len(evaluation["rule_based_weak"]))
-            ecol2.metric("KMeans Flagged Weak", len(evaluation["ml_weak"]))
-            ecol3.metric("Agreement Rate", f"{evaluation['agreement_rate']}%")
+            ecol1.metric("Flagged by the rule", len(evaluation["rule_based_weak"]))
+            ecol2.metric("Flagged by clustering", len(evaluation["ml_weak"]))
+            ecol3.metric("Agreement", f"{evaluation['agreement_rate']}%")
 
-            st.write("**Rule-based weak subjects:**", ", ".join(evaluation["rule_based_weak"]) or "None")
-            st.write("**ML (KMeans) weak subjects:**", ", ".join(evaluation["ml_weak"]) or "None")
-            st.write("**Subjects both methods agree on:**", ", ".join(evaluation["agreement"]) or "None")
+            st.write("**The rule says weak:**", ", ".join(evaluation["rule_based_weak"]) or "none")
+            st.write("**Clustering says weak:**", ", ".join(evaluation["ml_weak"]) or "none")
+            st.write("**Both agree on:**", ", ".join(evaluation["agreement"]) or "none")
 
-            with st.expander("ℹ️ Why KMeans instead of a Decision Tree?"):
-                st.write(
-                    "Decision Trees are supervised models that need many pre-labeled "
-                    "training examples. With only one student's small set of subjects, "
-                    "there isn't enough data to properly train/test a supervised model. "
-                    "KMeans is unsupervised — it finds natural groupings without needing "
-                    "labeled data, making it suitable for small, single-student datasets."
-                )
+            with st.expander("Why clustering, not a decision tree?"):
+                st.markdown("""
+                <p class="method-note">
+                A decision tree needs many past labeled examples to learn from — hundreds of
+                prior students marked "weak" or "strong". With just one student's handful of
+                subjects, there's nowhere near enough data for that. Clustering doesn't need
+                labels at all — it just looks at score, hours, and attempts together and groups
+                your subjects by how similar they are. That works fine even with only a few entries.
+                </p>
+                """, unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("AI Tutor App — Lab Project | Rule-Based AI + KMeans Clustering | Built with Streamlit")
+st.caption("Office Hours — rule-based scoring + K-means clustering · lab project")
