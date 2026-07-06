@@ -1,3 +1,12 @@
+"""
+tutor_logic.py
+--------------
+All AI logic for the AI Tutor app: data validation, rule-based priority
+scoring, KMeans clustering, recommendation generation, and evaluation.
+
+Keeping this separate from app.py (the UI) follows the "modular code"
+requirement — logic and interface are independent of each other.
+"""
 
 import pandas as pd
 import numpy as np
@@ -5,7 +14,9 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 
 
-
+# ---------------------------------------------------------------------------
+# 1. DATA LOADING
+# ---------------------------------------------------------------------------
 def load_data(path):
     """Load student marksheet data from a CSV file."""
     df = pd.read_csv(path)
@@ -17,6 +28,9 @@ def load_data_from_dict(data_dict):
     return pd.DataFrame(data_dict)
 
 
+# ---------------------------------------------------------------------------
+# 2. VALIDATION
+# ---------------------------------------------------------------------------
 def validate_data(df):
     """Check the dataframe for missing/invalid values. Returns list of error strings."""
     errors = []
@@ -46,6 +60,9 @@ def validate_data(df):
     return errors
 
 
+# ---------------------------------------------------------------------------
+# 3. PREPROCESSING
+# ---------------------------------------------------------------------------
 def preprocess_data(df):
     """Clean and ensure correct types."""
     df = df.copy()
@@ -56,6 +73,9 @@ def preprocess_data(df):
     return df
 
 
+# ---------------------------------------------------------------------------
+# 4. RULE-BASED AI — PRIORITY SCORE
+# ---------------------------------------------------------------------------
 def calculate_priority_score(row, weight_score=0.5, weight_attempts=8, weight_hours=3):
     """
     priority_score = (100 - quiz_score) * weight_score
@@ -77,7 +97,9 @@ def run_rule_based(df):
     return df.sort_values("priority_score", ascending=False).reset_index(drop=True)
 
 
-
+# ---------------------------------------------------------------------------
+# 5. MACHINE LEARNING — KMEANS CLUSTERING
+# ---------------------------------------------------------------------------
 def run_kmeans_clustering(df, n_clusters=3, random_state=42):
     """
     Groups subjects into Weak / Medium / Strong clusters using KMeans,
@@ -108,6 +130,9 @@ def run_kmeans_clustering(df, n_clusters=3, random_state=42):
     return df
 
 
+# ---------------------------------------------------------------------------
+# 6. RECOMMENDATION + EXPLAINABILITY
+# ---------------------------------------------------------------------------
 def generate_explanation(top_row):
     """Generate a plain-language explanation for the top-priority subject."""
     explanation = (
@@ -137,7 +162,9 @@ def generate_practice_questions(subject):
     return templates
 
 
-
+# ---------------------------------------------------------------------------
+# 7. EVALUATION — COMPARE RULE-BASED VS ML
+# ---------------------------------------------------------------------------
 def evaluate_approaches(df_ranked, weak_fraction=0.4):
     """
     Compares which subjects each approach flags as 'weak' and computes
@@ -158,6 +185,9 @@ def evaluate_approaches(df_ranked, weak_fraction=0.4):
     }
 
 
+# ---------------------------------------------------------------------------
+# 8. FULL PIPELINE (convenience wrapper)
+# ---------------------------------------------------------------------------
 def run_full_pipeline(df):
     """Runs validation -> preprocessing -> rule-based -> clustering -> evaluation."""
     errors = validate_data(df)

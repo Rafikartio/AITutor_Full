@@ -3,46 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mentor — Your AI Study Tutor</title>
+<title>Office Hours — Your AI Study Mentor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1B1F3B;
-    --indigo:#3B4CCA;
-    --indigo-deep:#2A3494;
-    --paper:#FAF8F4;
-    --paper-raised:#FFFFFF;
-    --line:#E4E1D8;
-    --weak:#C1443A;
-    --weak-bg:#FBEBE9;
-    --medium:#C8862B;
-    --medium-bg:#FBF1E2;
-    --strong:#2F7A52;
-    --strong-bg:#E9F5EE;
-    --muted:#6B6F8A;
-    --font-display:'Fraunces', serif;
-    --font-body:'Inter', sans-serif;
-    --font-mono:'IBM Plex Mono', monospace;
+    --paper:#F6F1E7;
+    --paper-2:#EFE8D8;
+    --card:#FFFDF8;
+    --ink:#1C1B19;
+    --ink-soft:#4A4742;
+    --ink-faint:#8C877D;
+    --rule:#DDD5C4;
+    --rule-strong:#C9BFA8;
+    --brick:#8B4A3B;
+    --brick-dark:#6E3A2E;
+    --brick-wash:#F1E2DC;
+    --weak:#A8452F;
+    --weak-bg:#F6E3DD;
+    --medium:#96692A;
+    --medium-bg:#F4EAD6;
+    --strong:#3E6B4E;
+    --strong-bg:#E4EEE3;
+    --font-voice:'Fraunces', serif;
+    --font-ui:'Inter', sans-serif;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
 
+  html{ scroll-behavior:smooth; }
+
   body{
-    font-family:var(--font-body);
+    font-family:var(--font-ui);
     background:var(--paper);
     color:var(--ink);
     min-height:100vh;
     line-height:1.5;
+    -webkit-font-smoothing:antialiased;
   }
 
-  /* subtle paper grain */
-  body::before{
-    content:"";
+  .desk-texture{
     position:fixed; inset:0;
-    background-image:radial-gradient(var(--line) 1px, transparent 1px);
-    background-size:26px 26px;
-    opacity:0.35;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px);
+    background-size:100% 42px;
+    opacity:0.25;
     pointer-events:none;
     z-index:0;
   }
@@ -50,735 +55,841 @@
   .shell{
     position:relative;
     z-index:1;
-    max-width:920px;
+    max-width:760px;
     margin:0 auto;
-    padding:56px 24px 100px;
+    padding:48px 24px 120px;
   }
 
-  /* ---------- HEADER ---------- */
   header{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:48px;
+    margin-bottom:40px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--rule);
   }
   .brand{
     display:flex;
-    align-items:center;
-    gap:12px;
+    align-items:baseline;
+    gap:10px;
   }
   .brand-mark{
-    width:38px; height:38px;
-    border-radius:10px;
-    background:var(--indigo);
-    display:flex; align-items:center; justify-content:center;
-    color:white;
-    font-family:var(--font-display);
-    font-weight:700;
-    font-size:19px;
-    flex-shrink:0;
+    font-family:var(--font-voice);
+    font-weight:600;
+    font-style:italic;
+    font-size:22px;
+    color:var(--brick);
   }
   .brand-name{
-    font-family:var(--font-display);
-    font-weight:600;
-    font-size:20px;
-    letter-spacing:-0.01em;
+    font-family:var(--font-voice);
+    font-weight:500;
+    font-size:19px;
+    color:var(--ink);
   }
-  .brand-tag{
+  .session-clock{
+    font-family:var(--font-ui);
     font-size:12px;
-    color:var(--muted);
-    font-family:var(--font-mono);
-    letter-spacing:0.02em;
+    color:var(--ink-faint);
+    letter-spacing:0.03em;
   }
 
-  .step-pill{
-    font-family:var(--font-mono);
-    font-size:11px;
-    color:var(--muted);
-    border:1px solid var(--line);
-    padding:6px 12px;
-    border-radius:20px;
-    background:var(--paper-raised);
-  }
-
-  /* ---------- HERO ---------- */
-  .hero{
-    margin-bottom:44px;
-  }
-  .hero h1{
-    font-family:var(--font-display);
+  .intro{ margin-bottom:36px; }
+  .intro-kicker{
+    font-size:12px;
     font-weight:600;
-    font-size:clamp(32px, 5vw, 44px);
-    line-height:1.12;
-    letter-spacing:-0.015em;
-    margin-bottom:14px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--brick);
+    margin-bottom:10px;
   }
-  .hero h1 em{
-    font-style:italic;
-    color:var(--indigo);
+  .intro h1{
+    font-family:var(--font-voice);
+    font-weight:500;
+    font-size:clamp(28px, 4.2vw, 38px);
+    line-height:1.22;
+    color:var(--ink);
+    max-width:600px;
   }
-  .hero p{
-    font-size:16px;
-    color:var(--muted);
+  .intro p{
+    margin-top:14px;
+    font-size:15px;
+    color:var(--ink-soft);
     max-width:520px;
+    line-height:1.6;
   }
 
-  /* ---------- CARD ---------- */
-  .card{
-    background:var(--paper-raised);
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:32px;
-    margin-bottom:28px;
-    box-shadow:0 1px 2px rgba(27,31,59,0.04);
+  .flow{
+    display:flex;
+    flex-direction:column;
+    gap:0;
   }
-  .card-head{
+
+  .prompt-line{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    padding:22px 0;
+    border-bottom:1px solid var(--rule);
+    opacity:0;
+    animation:fadeUp 0.4s ease forwards;
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .prompt-marker{
+    font-family:var(--font-voice);
+    font-style:italic;
+    color:var(--brick);
+    font-size:15px;
+    flex-shrink:0;
+    width:20px;
+    padding-top:2px;
+  }
+
+  .prompt-body{ flex:1; min-width:0; }
+
+  .prompt-question{
+    font-family:var(--font-voice);
+    font-size:17px;
+    color:var(--ink);
+    margin-bottom:12px;
+    line-height:1.4;
+  }
+
+  .prompt-input-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  .field{
+    font-family:var(--font-ui);
+    font-size:15px;
+    padding:11px 14px;
+    border:none;
+    border-bottom:1.5px solid var(--rule-strong);
+    background:transparent;
+    color:var(--ink);
+    transition:border-color 0.15s ease;
+    width:100%;
+  }
+  .field::placeholder{ color:var(--ink-faint); }
+  .field:focus{
+    outline:none;
+    border-bottom-color:var(--brick);
+  }
+  .field-subject{ max-width:100%; font-size:17px; }
+  .field-num{ max-width:120px; text-align:left; }
+
+  .unit-label{
+    font-size:13px;
+    color:var(--ink-faint);
+    white-space:nowrap;
+  }
+
+  .mini-fields{
+    display:flex;
+    gap:24px;
+    flex-wrap:wrap;
+    margin-top:4px;
+  }
+  .mini-field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .mini-field label{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-faint);
+    font-weight:600;
+  }
+
+  .desk{
+    margin-top:8px;
+  }
+  .desk-heading{
     display:flex;
     align-items:baseline;
     justify-content:space-between;
-    margin-bottom:22px;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-  .card-head h2{
-    font-family:var(--font-display);
-    font-size:21px;
-    font-weight:600;
-  }
-  .card-head .hint{
-    font-size:12.5px;
-    color:var(--muted);
-    font-family:var(--font-mono);
-  }
-
-  /* ---------- INPUT MODE TABS ---------- */
-  .mode-tabs{
-    display:flex;
-    gap:8px;
-    margin-bottom:24px;
-    flex-wrap:wrap;
-  }
-  .mode-tab{
-    font-family:var(--font-body);
-    font-size:13.5px;
-    font-weight:600;
-    padding:9px 16px;
-    border-radius:9px;
-    border:1px solid var(--line);
-    background:var(--paper);
-    color:var(--ink);
-    cursor:pointer;
-    transition:all 0.15s ease;
-  }
-  .mode-tab:hover{ border-color:var(--indigo); }
-  .mode-tab.active{
-    background:var(--indigo);
-    border-color:var(--indigo);
-    color:white;
-  }
-
-  /* ---------- SUBJECT ROWS ---------- */
-  .rows-head{
-    display:grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr 34px;
-    gap:12px;
-    font-family:var(--font-mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.04em;
-    color:var(--muted);
-    padding:0 4px 8px;
-    border-bottom:1px solid var(--line);
-    margin-bottom:12px;
-  }
-  #subjectRows{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
     margin-bottom:16px;
   }
-  .subject-row{
+  .desk-heading h3{
+    font-family:var(--font-voice);
+    font-size:16px;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .desk-count{
+    font-size:12.5px;
+    color:var(--ink-faint);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .card-grid{
     display:grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr 34px;
+    grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+    gap:12px;
+  }
+
+  .index-card{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:14px 16px;
+    position:relative;
+    box-shadow:1px 2px 0 rgba(28,27,25,0.04);
+    transition:transform 0.15s ease;
+  }
+  .index-card::before{
+    content:"";
+    position:absolute;
+    top:0; left:16px; right:16px;
+    height:1px;
+    background:var(--rule);
+  }
+  .index-card:hover{ transform:translateY(-2px); }
+  .index-card .card-subject{
+    font-family:var(--font-voice);
+    font-weight:500;
+    font-size:15px;
+    color:var(--ink);
+    margin-bottom:8px;
+    padding-right:20px;
+  }
+  .index-card .card-meta{
+    font-size:12px;
+    color:var(--ink-faint);
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+  }
+  .index-card .card-remove{
+    position:absolute;
+    top:10px; right:10px;
+    width:18px; height:18px;
+    border:none;
+    background:none;
+    color:var(--ink-faint);
+    cursor:pointer;
+    font-size:15px;
+    line-height:1;
+    padding:0;
+  }
+  .index-card .card-remove:hover{ color:var(--weak); }
+
+  .action-row{
+    display:flex;
     gap:12px;
     align-items:center;
-  }
-  .subject-row input{
-    width:100%;
-    font-family:var(--font-body);
-    font-size:14px;
-    padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:var(--paper);
-    color:var(--ink);
-    transition:border-color 0.15s ease;
-  }
-  .subject-row input:focus{
-    outline:none;
-    border-color:var(--indigo);
-    background:white;
-  }
-  .remove-row{
-    width:34px; height:34px;
-    border-radius:8px;
-    border:1px solid var(--line);
-    background:var(--paper);
-    color:var(--muted);
-    cursor:pointer;
-    font-size:16px;
-    display:flex; align-items:center; justify-content:center;
-    transition:all 0.15s ease;
-  }
-  .remove-row:hover{
-    border-color:var(--weak);
-    color:var(--weak);
-    background:var(--weak-bg);
-  }
-
-  .row-actions{
-    display:flex;
-    gap:10px;
-    margin-bottom:8px;
+    margin-top:24px;
     flex-wrap:wrap;
   }
-  .btn-ghost{
-    font-family:var(--font-body);
-    font-size:13.5px;
+
+  .btn{
+    font-family:var(--font-ui);
+    font-size:14px;
     font-weight:600;
-    padding:10px 16px;
-    border-radius:9px;
-    border:1px solid var(--line);
-    background:var(--paper);
-    color:var(--ink);
+    padding:12px 22px;
+    border-radius:2px;
     cursor:pointer;
+    border:1.5px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
     transition:all 0.15s ease;
   }
-  .btn-ghost:hover{ border-color:var(--indigo); color:var(--indigo); }
+  .btn:hover{ background:var(--ink); color:var(--paper); }
 
-  .upload-zone{
-    border:1.5px dashed var(--line);
-    border-radius:12px;
-    padding:36px 20px;
+  .btn-solid{
+    background:var(--brick);
+    border-color:var(--brick);
+    color:#FDF9F3;
+  }
+  .btn-solid:hover{ background:var(--brick-dark); border-color:var(--brick-dark); color:#FDF9F3; }
+
+  .btn-text{
+    border:none;
+    padding:12px 6px;
+    color:var(--ink-soft);
+    text-decoration:underline;
+    text-decoration-color:var(--rule-strong);
+    text-underline-offset:3px;
+    background:none;
+    cursor:pointer;
+    font-family:var(--font-ui);
+    font-size:13.5px;
+  }
+  .btn-text:hover{ color:var(--brick); text-decoration-color:var(--brick); }
+
+  .divider-word{
+    font-size:13px;
+    color:var(--ink-faint);
+    font-style:italic;
+    font-family:var(--font-voice);
+  }
+
+  .drop-zone{
+    border:1.5px dashed var(--rule-strong);
+    border-radius:4px;
+    padding:28px 20px;
     text-align:center;
     cursor:pointer;
+    margin-top:8px;
     transition:all 0.15s ease;
   }
-  .upload-zone:hover{
-    border-color:var(--indigo);
-    background:#F5F6FF;
-  }
-  .upload-zone p{ font-size:14px; color:var(--muted); }
-  .upload-zone strong{ color:var(--indigo); }
-  .upload-zone input{ display:none; }
+  .drop-zone:hover{ border-color:var(--brick); background:var(--brick-wash); }
+  .drop-zone p{ font-size:13.5px; color:var(--ink-soft); }
+  .drop-zone strong{ color:var(--brick); }
+  .drop-zone input{ display:none; }
 
-  .field-error{
-    background:var(--weak-bg);
-    border:1px solid #F0C9C5;
-    color:var(--weak);
+  .error-line{
     font-size:13px;
-    padding:12px 14px;
-    border-radius:9px;
-    margin-top:8px;
+    color:var(--weak);
+    padding:10px 0;
     display:none;
+    line-height:1.5;
   }
 
-  /* ---------- SETTINGS ---------- */
-  .settings-row{
+  .threshold-line{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:16px;
-    padding:14px 0;
-    border-top:1px solid var(--line);
+    padding:18px 0;
     margin-top:8px;
+    border-top:1px solid var(--rule);
   }
-  .settings-label{
-    font-size:14px;
-    font-weight:500;
-  }
-  .settings-label span{
-    display:block;
-    font-size:12px;
-    color:var(--muted);
-    font-weight:400;
-    margin-top:2px;
+  .threshold-copy{ font-size:13.5px; color:var(--ink-soft); }
+  .threshold-copy b{ color:var(--ink); }
+  .threshold-control{
+    display:flex;
+    align-items:center;
+    gap:10px;
   }
   input[type="range"]{
-    width:180px;
-    accent-color:var(--indigo);
+    width:140px;
+    accent-color:var(--brick);
   }
-  .range-value{
-    font-family:var(--font-mono);
-    font-size:13px;
-    color:var(--indigo);
-    font-weight:600;
-    min-width:40px;
-    text-align:right;
+  .threshold-value{
+    font-family:var(--font-voice);
+    font-size:16px;
+    color:var(--brick);
+    font-weight:500;
+    min-width:38px;
   }
 
-  /* ---------- PRIMARY CTA ---------- */
-  .btn-primary{
-    width:100%;
-    font-family:var(--font-body);
-    font-size:15.5px;
-    font-weight:700;
-    padding:16px;
-    border-radius:11px;
-    border:none;
-    background:var(--indigo);
-    color:white;
-    cursor:pointer;
-    margin-top:20px;
-    transition:all 0.15s ease;
-    letter-spacing:0.01em;
-  }
-  .btn-primary:hover{ background:var(--indigo-deep); }
-  .btn-primary:active{ transform:scale(0.995); }
-  .btn-primary:disabled{ opacity:0.5; cursor:not-allowed; }
-
-  /* ---------- LOADING ---------- */
-  .loading-wrap{
+  .loading-line{
     display:none;
     align-items:center;
-    gap:12px;
-    padding:20px 0 4px;
-    justify-content:center;
-    font-family:var(--font-mono);
-    font-size:13px;
-    color:var(--muted);
+    gap:10px;
+    padding:24px 0 4px;
+    font-family:var(--font-voice);
+    font-style:italic;
+    font-size:14.5px;
+    color:var(--ink-soft);
   }
-  .spinner{
-    width:16px; height:16px;
-    border:2px solid var(--line);
-    border-top-color:var(--indigo);
+  .pen-dot{
+    width:5px; height:5px;
     border-radius:50%;
-    animation:spin 0.7s linear infinite;
+    background:var(--brick);
+    animation:pulse 1s ease-in-out infinite;
   }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .pen-dot:nth-child(2){ animation-delay:0.15s; }
+  .pen-dot:nth-child(3){ animation-delay:0.3s; }
+  @keyframes pulse{ 0%,100%{opacity:0.25;} 50%{opacity:1;} }
+  .dots-wrap{ display:flex; gap:4px; }
 
-  /* ---------- RESULTS ---------- */
   #results{ display:none; }
 
-  .verdict-card{
-    background:var(--ink);
-    border-radius:18px;
-    padding:36px;
-    color:#F4F3FA;
-    margin-bottom:28px;
-    position:relative;
-    overflow:hidden;
+  .verdict{
+    margin:8px 0 44px;
+    padding-top:8px;
   }
-  .verdict-card::before{
-    content:"";
-    position:absolute;
-    top:-60px; right:-60px;
-    width:220px; height:220px;
-    background:radial-gradient(circle, rgba(59,76,202,0.35), transparent 70%);
+  .verdict-kicker{
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--brick);
+    margin-bottom:14px;
   }
-  .verdict-eyebrow{
-    font-family:var(--font-mono);
+  .verdict-line{
+    font-family:var(--font-voice);
+    font-size:clamp(22px, 3.4vw, 30px);
+    line-height:1.4;
+    color:var(--ink);
+    max-width:600px;
+  }
+  .verdict-line em{
+    font-style:italic;
+    color:var(--brick);
+  }
+  .verdict-note{
+    margin-top:18px;
+    font-size:15px;
+    color:var(--ink-soft);
+    max-width:560px;
+    line-height:1.65;
+  }
+  .verdict-stats{
+    display:flex;
+    gap:28px;
+    margin-top:24px;
+    flex-wrap:wrap;
+  }
+  .verdict-stat .n{
+    font-family:var(--font-voice);
+    font-size:22px;
+    color:var(--ink);
+  }
+  .verdict-stat .l{
     font-size:11.5px;
     text-transform:uppercase;
-    letter-spacing:0.08em;
-    color:#9BA3E8;
-    margin-bottom:14px;
-    position:relative;
-  }
-  .verdict-title{
-    font-family:var(--font-display);
-    font-size:clamp(24px, 3.6vw, 32px);
-    font-weight:600;
-    line-height:1.25;
-    margin-bottom:16px;
-    position:relative;
-  }
-  .verdict-title .subject-name{
-    color:#B9C1FF;
-    font-style:italic;
-  }
-  .verdict-body{
-    font-size:15px;
-    color:#D7D8EA;
-    line-height:1.65;
-    max-width:640px;
-    position:relative;
-  }
-  .verdict-tags{
-    display:flex;
-    gap:10px;
-    margin-top:20px;
-    flex-wrap:wrap;
-    position:relative;
-  }
-  .verdict-tag{
-    font-family:var(--font-mono);
-    font-size:12px;
-    padding:6px 12px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.14);
+    letter-spacing:0.05em;
+    color:var(--ink-faint);
+    margin-top:2px;
   }
 
-  /* practice questions */
+  .section{
+    margin-bottom:40px;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:18px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--rule-strong);
+  }
+  .section-head h2{
+    font-family:var(--font-voice);
+    font-size:19px;
+    font-weight:500;
+  }
+  .section-head .tag{
+    font-size:12px;
+    color:var(--ink-faint);
+    font-style:italic;
+    font-family:var(--font-voice);
+  }
+
   .practice-list{
     list-style:none;
     display:flex;
     flex-direction:column;
-    gap:10px;
-    margin-top:16px;
   }
   .practice-list li{
     display:flex;
-    gap:12px;
-    align-items:flex-start;
-    font-size:14px;
-    padding:12px 14px;
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:10px;
+    gap:14px;
+    align-items:baseline;
+    font-size:14.5px;
+    color:var(--ink-soft);
+    padding:13px 0;
+    border-bottom:1px solid var(--rule);
+    line-height:1.5;
   }
-  .practice-list li::before{
-    content:"→";
-    color:var(--indigo);
-    font-weight:700;
+  .practice-list li:last-child{ border-bottom:none; }
+  .practice-num{
+    font-family:var(--font-voice);
+    font-style:italic;
+    color:var(--brick);
     flex-shrink:0;
   }
 
-  /* ---------- SUBJECT TABLE ---------- */
-  .subject-table{ width:100%; border-collapse:collapse; }
-  .subject-table th{
-    font-family:var(--font-mono);
+  .rank-list{ display:flex; flex-direction:column; }
+  .rank-row{
+    display:grid;
+    grid-template-columns:28px 1.4fr 90px 90px 70px;
+    gap:12px;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid var(--rule);
+    font-size:14px;
+  }
+  .rank-row:last-child{ border-bottom:none; }
+  .rank-row.head{
     font-size:11px;
     text-transform:uppercase;
     letter-spacing:0.04em;
-    color:var(--muted);
-    text-align:left;
-    padding:0 10px 10px;
-    border-bottom:1px solid var(--line);
-  }
-  .subject-table td{
-    padding:14px 10px;
-    border-bottom:1px solid var(--line);
-    font-size:14px;
-  }
-  .subject-table tr:last-child td{ border-bottom:none; }
-  .subj-cell{
-    display:flex;
-    align-items:center;
-    gap:10px;
+    color:var(--ink-faint);
     font-weight:600;
+    padding-bottom:10px;
   }
-  .level-badge{
-    font-family:var(--font-mono);
+  .rank-idx{
+    font-family:var(--font-voice);
+    font-style:italic;
+    color:var(--ink-faint);
+  }
+  .rank-subject{ font-weight:600; color:var(--ink); }
+  .rank-score-cell{ display:flex; flex-direction:column; gap:5px; }
+  .score-bar-track{
+    width:100%; height:4px;
+    background:var(--rule);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .score-bar-fill{ height:100%; }
+
+  .level-tag{
     font-size:11px;
     font-weight:600;
-    padding:4px 10px;
-    border-radius:20px;
+    padding:3px 9px;
+    border-radius:10px;
     display:inline-block;
+    width:fit-content;
   }
   .level-Weak{ background:var(--weak-bg); color:var(--weak); }
   .level-Medium{ background:var(--medium-bg); color:var(--medium); }
   .level-Strong{ background:var(--strong-bg); color:var(--strong); }
 
-  .score-bar-track{
-    width:100%;
-    height:6px;
-    background:var(--line);
-    border-radius:4px;
-    overflow:hidden;
-    margin-top:6px;
-  }
-  .score-bar-fill{
-    height:100%;
-    border-radius:4px;
-  }
-
-  /* ---------- CHARTS ---------- */
-  .chart-grid{
+  .chart-row{
     display:grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap:24px;
+    grid-template-columns:1.3fr 1fr;
+    gap:32px;
+    align-items:center;
   }
-  @media (max-width:720px){
-    .chart-grid{ grid-template-columns:1fr; }
-    .rows-head{ display:none; }
-    .subject-row{ grid-template-columns:1fr; gap:6px; padding:12px; border:1px solid var(--line); border-radius:10px; }
-    .remove-row{ justify-self:end; }
-  }
+  @media (max-width:640px){ .chart-row{ grid-template-columns:1fr; } }
+  svg text{ font-family:var(--font-ui); }
 
-  svg text{ font-family:var(--font-body); }
-
-  /* ---------- EVAL PANEL ---------- */
-  .eval-grid{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:16px;
+  .eval-row{
+    display:flex;
+    gap:36px;
     margin-bottom:20px;
+    flex-wrap:wrap;
   }
-  .eval-stat{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:18px;
-    text-align:center;
+  .eval-item .n{
+    font-family:var(--font-voice);
+    font-size:26px;
+    color:var(--ink);
   }
-  .eval-stat .num{
-    font-family:var(--font-display);
-    font-size:28px;
-    font-weight:600;
-    color:var(--indigo);
-  }
-  .eval-stat .lbl{
+  .eval-item .l{
     font-size:12px;
-    color:var(--muted);
-    margin-top:4px;
+    color:var(--ink-faint);
+    margin-top:2px;
   }
-  @media (max-width:600px){ .eval-grid{ grid-template-columns:1fr; } }
-
-  .eval-detail{
+  .eval-line{
     font-size:13.5px;
-    color:var(--muted);
-    padding:10px 0;
-    border-top:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:9px 0;
+    border-top:1px solid var(--rule);
   }
-  .eval-detail b{ color:var(--ink); }
+  .eval-line b{ color:var(--ink); font-weight:600; }
 
   details.why{
-    margin-top:16px;
+    margin-top:18px;
     font-size:13.5px;
-    color:var(--muted);
   }
   details.why summary{
     cursor:pointer;
-    color:var(--indigo);
+    color:var(--brick);
     font-weight:600;
-    font-size:13.5px;
+    list-style:none;
   }
-  details.why p{ margin-top:10px; line-height:1.6; }
+  details.why summary::-webkit-details-marker{ display:none; }
+  details.why summary::before{ content:"+ "; }
+  details.why[open] summary::before{ content:"− "; }
+  details.why p{
+    margin-top:10px;
+    color:var(--ink-soft);
+    line-height:1.65;
+    max-width:560px;
+  }
 
   footer{
     text-align:center;
-    font-family:var(--font-mono);
     font-size:12px;
-    color:var(--muted);
-    margin-top:40px;
+    color:var(--ink-faint);
+    margin-top:56px;
+    font-style:italic;
+    font-family:var(--font-voice);
+  }
+
+  @media (max-width:560px){
+    .rank-row{ grid-template-columns:20px 1fr 60px; }
   }
 </style>
 </head>
 <body>
 
+<div class="desk-texture"></div>
+
 <div class="shell">
 
   <header>
     <div class="brand">
-      <div class="brand-mark">M</div>
-      <div>
-        <div class="brand-name">Mentor</div>
-        <div class="brand-tag">ai study tutor</div>
-      </div>
+      <span class="brand-mark">§</span>
+      <span class="brand-name">Office Hours</span>
     </div>
-    <div class="step-pill" id="stepPill">step 1 of 2</div>
+    <div class="session-clock" id="clockLine">new session</div>
   </header>
 
-  <div class="hero">
-    <h1>Tell me your scores.<br>I'll tell you what to <em>study next</em>.</h1>
-    <p>Enter your own subjects and quiz results below. Mentor ranks them, spots where you're struggling, and explains exactly why — no generic dataset, just your own marksheet.</p>
+  <div class="intro" id="introBlock">
+    <div class="intro-kicker">before we start</div>
+    <h1>Tell me about your subjects — one at a time — and I'll tell you where to focus next.</h1>
+    <p>No spreadsheets. Just answer a few short questions about each subject, the way you'd tell a tutor sitting across from you.</p>
   </div>
 
-  <!-- INPUT CARD -->
-  <div class="card" id="inputCard">
-    <div class="card-head">
-      <h2>Your marksheet</h2>
-      <div class="hint">3–10 subjects recommended</div>
+  <div class="flow" id="flowContainer"></div>
+
+  <div class="desk" id="deskBlock" style="display:none;">
+    <div class="desk-heading">
+      <h3>On your desk</h3>
+      <span class="desk-count" id="deskCount">0 subjects</span>
     </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </div>
 
-    <div class="mode-tabs">
-      <button class="mode-tab active" data-mode="manual">✏️ Enter manually</button>
-      <button class="mode-tab" data-mode="demo">⚡ Try demo data</button>
-      <button class="mode-tab" data-mode="upload">📄 Upload CSV</button>
-    </div>
+  <div class="error-line" id="errorLine"></div>
 
-    <!-- MANUAL MODE -->
-    <div id="manualMode">
-      <div class="rows-head">
-        <div>Subject</div><div>Quiz score (%)</div><div>Hours studied</div><div>Attempts</div><div></div>
-      </div>
-      <div id="subjectRows"></div>
-      <div class="row-actions">
-        <button class="btn-ghost" id="addRowBtn">+ Add subject</button>
-      </div>
-    </div>
+  <div class="action-row" id="actionRow">
+    <button class="btn-text" id="uploadToggle">or upload a CSV instead</button>
+    <span class="divider-word">·</span>
+    <button class="btn-text" id="demoToggle">try it with sample data</button>
+  </div>
 
-    <!-- UPLOAD MODE -->
-    <div id="uploadMode" style="display:none;">
-      <label class="upload-zone" for="csvInput">
-        <p><strong>Click to upload</strong> or drag your CSV here</p>
-        <p style="margin-top:6px; font-family:var(--font-mono); font-size:12px;">columns: subject, quiz_score, hours_studied, attempts</p>
-        <input type="file" id="csvInput" accept=".csv">
-      </label>
-      <div id="uploadStatus" style="margin-top:12px; font-size:13.5px; color:var(--muted);"></div>
-    </div>
+  <div class="drop-zone" id="dropZone" style="display:none;">
+    <label style="cursor:pointer; display:block;">
+      <p><strong>Click to choose a file</strong> — or drag it here</p>
+      <p style="margin-top:6px; font-size:12px;">needs columns: subject, quiz_score, hours_studied, attempts</p>
+      <input type="file" id="csvInput" accept=".csv">
+    </label>
+    <div id="uploadStatus" style="margin-top:10px; font-size:13px;"></div>
+  </div>
 
-    <div class="field-error" id="fieldError"></div>
-
-    <div class="settings-row">
-      <div class="settings-label">
-        Weak-score threshold
-        <span>Scores below this are treated as struggling</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:10px;">
-        <input type="range" id="thresholdSlider" min="30" max="90" value="60">
-        <span class="range-value" id="thresholdValue">60%</span>
-      </div>
-    </div>
-
-    <button class="btn-primary" id="analyseBtn">Ask Mentor to review my subjects</button>
-
-    <div class="loading-wrap" id="loadingWrap">
-      <div class="spinner"></div>
-      <span id="loadingText">Reading your marksheet…</span>
+  <div class="threshold-line" id="thresholdBlock" style="display:none;">
+    <div class="threshold-copy"><b>Where should "struggling" start?</b><br>subjects scoring below this get flagged</div>
+    <div class="threshold-control">
+      <input type="range" id="thresholdSlider" min="30" max="90" value="60">
+      <span class="threshold-value" id="thresholdValue">60%</span>
     </div>
   </div>
 
-  <!-- RESULTS -->
+  <div class="action-row" id="reviewRow" style="display:none;">
+    <button class="btn btn-solid" id="analyseBtn">Ask for my recommendation</button>
+  </div>
+
+  <div class="loading-line" id="loadingLine">
+    <span class="dots-wrap"><span class="pen-dot"></span><span class="pen-dot"></span><span class="pen-dot"></span></span>
+    <span id="loadingText">reading through what you've told me…</span>
+  </div>
+
   <div id="results">
 
-    <div class="verdict-card">
-      <div class="verdict-eyebrow">Mentor's verdict</div>
-      <div class="verdict-title">You should focus on <span class="subject-name" id="verdictSubject">—</span> next.</div>
-      <div class="verdict-body" id="verdictBody">—</div>
-      <div class="verdict-tags" id="verdictTags"></div>
+    <div class="verdict">
+      <div class="verdict-kicker">my read on things</div>
+      <div class="verdict-line">You should put your next session into <em id="verdictSubject">—</em>.</div>
+      <div class="verdict-note" id="verdictBody">—</div>
+      <div class="verdict-stats" id="verdictStats"></div>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>Where to practice</h2>
-        <div class="hint">auto-generated</div>
+    <div class="section">
+      <div class="section-head">
+        <h2>Where to start</h2>
+        <span class="tag">practice suggestions</span>
       </div>
       <ul class="practice-list" id="practiceList"></ul>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>All your subjects, ranked</h2>
-        <div class="hint">most urgent first</div>
+    <div class="section">
+      <div class="section-head">
+        <h2>Everything, ranked</h2>
+        <span class="tag">most urgent first</span>
       </div>
-      <table class="subject-table" id="subjectTable">
-        <thead>
-          <tr><th>Subject</th><th>Score</th><th>Attempts</th><th>Hours</th><th>Priority</th><th>Level</th></tr>
-        </thead>
-        <tbody id="subjectTableBody"></tbody>
-      </table>
+      <div class="rank-list" id="rankList"></div>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>Visual breakdown</h2>
-        <div class="hint">priority + distribution</div>
+    <div class="section">
+      <div class="section-head">
+        <h2>The shape of it</h2>
+        <span class="tag">priority + spread</span>
       </div>
-      <div class="chart-grid">
-        <div>
-          <svg id="barChart" viewBox="0 0 480 260" width="100%"></svg>
-        </div>
-        <div>
-          <svg id="pieChart" viewBox="0 0 260 260" width="100%"></svg>
-        </div>
+      <div class="chart-row">
+        <svg id="barChart" viewBox="0 0 420 230" width="100%"></svg>
+        <svg id="pieChart" viewBox="0 0 240 240" width="100%"></svg>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>How confident is this?</h2>
-        <div class="hint">rule-based vs clustering</div>
+    <div class="section">
+      <div class="section-head">
+        <h2>How sure am I</h2>
+        <span class="tag">two methods, compared</span>
       </div>
-      <div class="eval-grid">
-        <div class="eval-stat"><div class="num" id="evalRule">0</div><div class="lbl">flagged weak by rules</div></div>
-        <div class="eval-stat"><div class="num" id="evalMl">0</div><div class="lbl">flagged weak by clustering</div></div>
-        <div class="eval-stat"><div class="num" id="evalAgree">0%</div><div class="lbl">agreement rate</div></div>
+      <div class="eval-row">
+        <div class="eval-item"><div class="n" id="evalRule">0</div><div class="l">flagged by the rule</div></div>
+        <div class="eval-item"><div class="n" id="evalMl">0</div><div class="l">flagged by clustering</div></div>
+        <div class="eval-item"><div class="n" id="evalAgree">0%</div><div class="l">agreement</div></div>
       </div>
-      <div class="eval-detail"><b>Rule-based flags:</b> <span id="evalRuleList">—</span></div>
-      <div class="eval-detail"><b>Clustering flags:</b> <span id="evalMlList">—</span></div>
-      <div class="eval-detail"><b>Both agree on:</b> <span id="evalAgreeList">—</span></div>
+      <div class="eval-line"><b>The rule says weak:</b> <span id="evalRuleList">—</span></div>
+      <div class="eval-line"><b>Clustering says weak:</b> <span id="evalMlList">—</span></div>
+      <div class="eval-line"><b>Both agree on:</b> <span id="evalAgreeList">—</span></div>
 
       <details class="why">
-        <summary>Why clustering instead of a Decision Tree?</summary>
-        <p>Decision Trees are supervised models — they need many pre-labeled training examples to learn from. With only one student's handful of subjects, there isn't nearly enough data to train and test one properly. Mentor instead uses K-means clustering, an unsupervised method that groups your subjects into Weak / Medium / Strong purely from the patterns in score, attempts, and hours — no labeled training data required.</p>
+        <summary>why clustering, not a decision tree?</summary>
+        <p>A decision tree needs many past labeled examples to learn from — hundreds of prior students marked "weak" or "strong". With just one student's handful of subjects, there's nowhere near enough data for that. Clustering doesn't need labels at all — it just looks at score, hours, and attempts together and groups your subjects by how similar they are. That works fine even with only a few entries.</p>
       </details>
     </div>
 
-    <button class="btn-ghost" id="restartBtn" style="width:100%; padding:14px;">↺ Analyse a different marksheet</button>
+    <button class="btn-text" id="restartBtn">start over with a different subject list</button>
   </div>
 
-  <footer>Mentor — Rule-based scoring + K-means clustering, running entirely in your browser</footer>
+  <footer>rule-based scoring · k-means clustering · runs entirely in your browser</footer>
 </div>
 
 <script>
-// ============================================================================
-// STATE
-// ============================================================================
-let currentMode = "manual";
+const COLORS = { Weak: "#A8452F", Medium: "#96692A", Strong: "#3E6B4E" };
+let subjects = [];
 let uploadedData = null;
-const COLORS = { Weak: "#C1443A", Medium: "#C8862B", Strong: "#2F7A52" };
-const COLOR_BG = { Weak: "#FBEBE9", Medium: "#FBF1E2", Strong: "#E9F5EE" };
+let inputMode = "conversation";
 
-// ============================================================================
-// MANUAL ROW MANAGEMENT
-// ============================================================================
-const subjectRowsEl = document.getElementById("subjectRows");
-let rowCount = 0;
+const flowContainer = document.getElementById("flowContainer");
+const deskBlock = document.getElementById("deskBlock");
+const cardGrid = document.getElementById("cardGrid");
+const deskCount = document.getElementById("deskCount");
+const actionRow = document.getElementById("actionRow");
+const reviewRow = document.getElementById("reviewRow");
+const errorLine = document.getElementById("errorLine");
+const thresholdBlock = document.getElementById("thresholdBlock");
 
-function addRow(subject = "", score = "", hours = "", attempts = "") {
-  rowCount++;
-  const row = document.createElement("div");
-  row.className = "subject-row";
-  row.innerHTML = `
-    <input type="text" placeholder="e.g. Math" value="${subject}" data-field="subject">
-    <input type="number" placeholder="0-100" min="0" max="100" value="${score}" data-field="score">
-    <input type="number" placeholder="hrs" min="0" step="0.5" value="${hours}" data-field="hours">
-    <input type="number" placeholder="tries" min="1" step="1" value="${attempts}" data-field="attempts">
-    <button class="remove-row" title="Remove subject">×</button>
-  `;
-  row.querySelector(".remove-row").addEventListener("click", () => {
-    row.remove();
-  });
-  subjectRowsEl.appendChild(row);
+function setClock(){
+  const now = new Date();
+  document.getElementById("clockLine").textContent = now.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
 }
+setClock();
 
-// seed with 3 empty rows
-addRow("Math", 45, 2, 4);
-addRow("Physics", 78, 3, 1);
-addRow("English", 90, 1, 1);
+let draftSubject = "";
 
-document.getElementById("addRowBtn").addEventListener("click", () => addRow());
-
-// ============================================================================
-// MODE TABS
-// ============================================================================
-document.querySelectorAll(".mode-tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".mode-tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-    currentMode = tab.dataset.mode;
-
-    document.getElementById("manualMode").style.display = currentMode === "manual" ? "block" : "none";
-    document.getElementById("uploadMode").style.display = currentMode === "upload" ? "block" : "none";
-
-    if (currentMode === "demo") {
-      subjectRowsEl.innerHTML = "";
-      addRow("Math", 45, 2, 4);
-      addRow("Physics", 78, 3, 1);
-      addRow("English", 90, 1, 1);
-      addRow("Computer Science", 52, 4, 5);
-      addRow("Chemistry", 65, 2, 2);
-      document.getElementById("manualMode").style.display = "block";
+function renderPrompt(){
+  flowContainer.innerHTML = `
+    <div class="prompt-line">
+      <span class="prompt-marker">—</span>
+      <div class="prompt-body">
+        <div class="prompt-question">${subjects.length === 0 ? "What's the first subject you want to look at?" : "Another subject to add?"}</div>
+        <div class="prompt-input-row">
+          <input type="text" class="field field-subject" id="subjectInput" placeholder="e.g. Organic Chemistry" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  `;
+  const input = document.getElementById("subjectInput");
+  input.focus();
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && input.value.trim()){
+      draftSubject = input.value.trim();
+      renderDetailPrompt();
     }
   });
+}
+
+function renderDetailPrompt(){
+  flowContainer.innerHTML = `
+    <div class="prompt-line">
+      <span class="prompt-marker">—</span>
+      <div class="prompt-body">
+        <div class="prompt-question">Good. How did <em style="font-style:italic;color:var(--brick);">${draftSubject}</em> go?</div>
+        <div class="mini-fields">
+          <div class="mini-field">
+            <label>Quiz score</label>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <input type="number" class="field field-num" id="scoreInput" min="0" max="100" placeholder="72">
+              <span class="unit-label">%</span>
+            </div>
+          </div>
+          <div class="mini-field">
+            <label>Hours studied</label>
+            <input type="number" class="field field-num" id="hoursInput" min="0" step="0.5" placeholder="3">
+          </div>
+          <div class="mini-field">
+            <label>Attempts</label>
+            <input type="number" class="field field-num" id="attemptsInput" min="1" step="1" placeholder="1">
+          </div>
+        </div>
+        <div class="action-row" style="margin-top:18px;">
+          <button class="btn btn-solid" id="addSubjectBtn">Add to my desk</button>
+          <button class="btn-text" id="cancelSubjectBtn">never mind</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("scoreInput").focus();
+
+  document.getElementById("addSubjectBtn").addEventListener("click", commitSubject);
+  document.getElementById("cancelSubjectBtn").addEventListener("click", () => {
+    draftSubject = "";
+    renderPrompt();
+  });
+
+  [...document.querySelectorAll(".field-num")].forEach(inp => {
+    inp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") commitSubject();
+    });
+  });
+}
+
+function commitSubject(){
+  const score = parseFloat(document.getElementById("scoreInput").value);
+  const hours = parseFloat(document.getElementById("hoursInput").value);
+  const attempts = parseInt(document.getElementById("attemptsInput").value);
+
+  const errs = [];
+  if (isNaN(score) || score < 0 || score > 100) errs.push("score should be between 0 and 100.");
+  if (isNaN(hours) || hours < 0) errs.push("hours studied can't be negative.");
+  if (isNaN(attempts) || attempts < 1) errs.push("attempts should be at least 1.");
+
+  if (errs.length){
+    errorLine.innerHTML = errs.join("<br>");
+    errorLine.style.display = "block";
+    return;
+  }
+  errorLine.style.display = "none";
+
+  subjects.push({ subject: draftSubject, score, hours, attempts });
+  draftSubject = "";
+  renderDesk();
+  renderPrompt();
+}
+
+function renderDesk(){
+  if (subjects.length === 0){
+    deskBlock.style.display = "none";
+    reviewRow.style.display = "none";
+    thresholdBlock.style.display = "none";
+    return;
+  }
+  deskBlock.style.display = "block";
+  reviewRow.style.display = "flex";
+  thresholdBlock.style.display = "flex";
+  deskCount.textContent = subjects.length + (subjects.length === 1 ? " subject" : " subjects");
+
+  cardGrid.innerHTML = subjects.map((s, i) => `
+    <div class="index-card">
+      <button class="card-remove" data-idx="${i}" title="remove">×</button>
+      <div class="card-subject">${s.subject}</div>
+      <div class="card-meta">
+        <span>${s.score}% score</span>
+        <span>${s.hours}h studied · ${s.attempts} attempt${s.attempts > 1 ? "s" : ""}</span>
+      </div>
+    </div>
+  `).join("");
+
+  [...cardGrid.querySelectorAll(".card-remove")].forEach(btn => {
+    btn.addEventListener("click", () => {
+      subjects.splice(parseInt(btn.dataset.idx), 1);
+      renderDesk();
+    });
+  });
+}
+
+renderPrompt();
+
+document.getElementById("uploadToggle").addEventListener("click", () => {
+  const dz = document.getElementById("dropZone");
+  dz.style.display = dz.style.display === "none" ? "block" : "none";
 });
 
-// ============================================================================
-// CSV UPLOAD
-// ============================================================================
 document.getElementById("csvInput").addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -787,11 +898,15 @@ document.getElementById("csvInput").addEventListener("change", (e) => {
     try {
       const rows = parseCSV(evt.target.result);
       uploadedData = rows;
+      subjects = rows;
+      inputMode = "upload";
+      renderDesk();
       document.getElementById("uploadStatus").innerHTML =
-        `✓ Loaded <b>${rows.length}</b> subjects from <b>${file.name}</b>`;
+        `loaded <b>${rows.length}</b> subjects from ${file.name}`;
+      flowContainer.innerHTML = "";
     } catch (err) {
       document.getElementById("uploadStatus").innerHTML =
-        `<span style="color:var(--weak)">Could not read file: ${err.message}</span>`;
+        `<span style="color:var(--weak)">couldn't read that file — ${err.message}</span>`;
     }
   };
   reader.readAsText(file);
@@ -819,55 +934,26 @@ function parseCSV(text) {
   return rows;
 }
 
-// ============================================================================
-// THRESHOLD SLIDER
-// ============================================================================
+document.getElementById("demoToggle").addEventListener("click", () => {
+  subjects = [
+    { subject: "Math", score: 45, hours: 2, attempts: 4 },
+    { subject: "Physics", score: 78, hours: 3, attempts: 1 },
+    { subject: "English", score: 90, hours: 1, attempts: 1 },
+    { subject: "Computer Science", score: 52, hours: 4, attempts: 5 },
+    { subject: "Chemistry", score: 65, hours: 2, attempts: 2 },
+  ];
+  inputMode = "conversation";
+  renderDesk();
+  flowContainer.innerHTML = "";
+  document.getElementById("dropZone").style.display = "none";
+});
+
 const thresholdSlider = document.getElementById("thresholdSlider");
 const thresholdValue = document.getElementById("thresholdValue");
 thresholdSlider.addEventListener("input", () => {
   thresholdValue.textContent = thresholdSlider.value + "%";
 });
 
-// ============================================================================
-// GATHER INPUT
-// ============================================================================
-function gatherData() {
-  if (currentMode === "upload") {
-    if (!uploadedData) throw new Error("Please upload a CSV file first.");
-    return uploadedData;
-  }
-  const rows = [...subjectRowsEl.querySelectorAll(".subject-row")];
-  const data = rows.map(row => {
-    const inputs = row.querySelectorAll("input");
-    return {
-      subject: inputs[0].value.trim(),
-      score: parseFloat(inputs[1].value),
-      hours: parseFloat(inputs[2].value),
-      attempts: parseInt(inputs[3].value),
-    };
-  });
-  return data;
-}
-
-function validateData(data) {
-  const errors = [];
-  if (!data || data.length === 0) {
-    errors.push("Add at least one subject.");
-    return errors;
-  }
-  data.forEach((d, i) => {
-    const label = d.subject || `Row ${i + 1}`;
-    if (!d.subject) errors.push(`Row ${i + 1} is missing a subject name.`);
-    if (isNaN(d.score) || d.score < 0 || d.score > 100) errors.push(`${label}: score must be 0–100.`);
-    if (isNaN(d.hours) || d.hours < 0) errors.push(`${label}: hours studied can't be negative.`);
-    if (isNaN(d.attempts) || d.attempts < 1) errors.push(`${label}: attempts must be at least 1.`);
-  });
-  return errors;
-}
-
-// ============================================================================
-// AI LOGIC: RULE-BASED PRIORITY SCORE
-// ============================================================================
 function calculatePriority(d) {
   const scoreGap = (100 - d.score) * 0.5;
   const attemptPenalty = d.attempts * 8;
@@ -875,9 +961,6 @@ function calculatePriority(d) {
   return Math.round((scoreGap + attemptPenalty + effortPenalty) * 100) / 100;
 }
 
-// ============================================================================
-// AI LOGIC: K-MEANS CLUSTERING (k=3, simple JS implementation)
-// ============================================================================
 function normalize(values) {
   const min = Math.min(...values), max = Math.max(...values);
   const range = max - min || 1;
@@ -885,14 +968,11 @@ function normalize(values) {
 }
 
 function kmeans(points, k, iterations = 50) {
-  // points: array of [x,y,z]
   k = Math.min(k, points.length);
-  // init centroids as first k points (deterministic-ish for small n)
   let centroids = points.slice(0, k).map(p => [...p]);
   let assignments = new Array(points.length).fill(0);
 
   for (let iter = 0; iter < iterations; iter++) {
-    // assign
     let changed = false;
     for (let i = 0; i < points.length; i++) {
       let bestDist = Infinity, bestC = 0;
@@ -903,7 +983,6 @@ function kmeans(points, k, iterations = 50) {
       if (assignments[i] !== bestC) changed = true;
       assignments[i] = bestC;
     }
-    // update
     for (let c = 0; c < k; c++) {
       const members = points.filter((_, i) => assignments[i] === c);
       if (members.length === 0) continue;
@@ -930,7 +1009,6 @@ function runClustering(data) {
   const k = Math.min(3, data.length);
   const assignments = kmeans(points, k);
 
-  // label clusters by average quiz_score: lowest = Weak
   const clusterScores = {};
   const clusterCounts = {};
   assignments.forEach((c, i) => {
@@ -948,141 +1026,118 @@ function runClustering(data) {
   return assignments.map(c => clusterToLabel[c]);
 }
 
-// ============================================================================
-// EXPLANATIONS
-// ============================================================================
 function generateExplanation(top) {
-  return `Your score in ${top.subject} is ${top.score}%, which Mentor's clustering classifies as "${top.level}" performance. ` +
-    `You've attempted it ${top.attempts} time${top.attempts > 1 ? "s" : ""} and studied it for ${top.hours} hour${top.hours != 1 ? "s" : ""} so far. ` +
-    `That combination — low results despite real effort — gives it the highest priority score of all your subjects: ${top.priority}. ` +
-    `Put your next study session here before anywhere else.`;
+  return `Your score in ${top.subject} sits at ${top.score}% — clustering reads that as "${top.level}" performance right now. You've already put in ${top.attempts} attempt${top.attempts > 1 ? "s" : ""} and ${top.hours} hour${top.hours != 1 ? "s" : ""} of study time here, which is real effort that isn't quite landing yet. That gap between effort and result is exactly what pushes it to the top of your list — priority score ${top.priority}, the highest of everything on your desk.`;
 }
 
 function generateQuestions(subject) {
   return [
-    `Review the core definitions and key terms in ${subject}.`,
-    `Attempt 5 fresh practice problems focused on ${subject} fundamentals.`,
-    `Re-read your ${subject} notes and summarise the topic in your own words — teaching it back is the fastest way to find gaps.`,
+    `Go back over the core definitions and key terms in ${subject} — gaps often hide there.`,
+    `Work through 5 fresh practice problems, focused just on the fundamentals.`,
+    `Try explaining ${subject} out loud in your own words. If you stumble, that's exactly where to look next.`,
   ];
 }
 
-// ============================================================================
-// MAIN PIPELINE
-// ============================================================================
 document.getElementById("analyseBtn").addEventListener("click", () => {
-  const errorBox = document.getElementById("fieldError");
-  errorBox.style.display = "none";
-
-  let data;
-  try {
-    data = gatherData();
-  } catch (err) {
-    errorBox.textContent = err.message;
-    errorBox.style.display = "block";
+  if (subjects.length === 0) {
+    errorLine.textContent = "Add at least one subject before asking for a recommendation.";
+    errorLine.style.display = "block";
     return;
   }
+  errorLine.style.display = "none";
 
-  const errors = validateData(data);
-  if (errors.length > 0) {
-    errorBox.innerHTML = errors.map(e => `• ${e}`).join("<br>");
-    errorBox.style.display = "block";
-    return;
-  }
-
-  // loading sequence
-  const loadingWrap = document.getElementById("loadingWrap");
+  const loadingLine = document.getElementById("loadingLine");
   const loadingText = document.getElementById("loadingText");
   const analyseBtn = document.getElementById("analyseBtn");
   analyseBtn.disabled = true;
-  loadingWrap.style.display = "flex";
+  loadingLine.style.display = "flex";
 
-  const messages = ["Reading your marksheet…", "Scoring each subject…", "Clustering performance levels…", "Writing your verdict…"];
+  const messages = [
+    "reading through what you've told me…",
+    "weighing effort against results…",
+    "grouping subjects by how they compare…",
+    "putting together my recommendation…"
+  ];
   let step = 0;
   loadingText.textContent = messages[0];
   const interval = setInterval(() => {
     step++;
     if (step < messages.length) loadingText.textContent = messages[step];
-  }, 380);
+  }, 420);
 
   setTimeout(() => {
     clearInterval(interval);
-    loadingWrap.style.display = "none";
+    loadingLine.style.display = "none";
     analyseBtn.disabled = false;
-    runAnalysis(data);
-  }, 1600);
+    runAnalysis();
+  }, 1750);
 });
 
-function runAnalysis(data) {
-  const threshold = parseInt(thresholdSlider.value);
+function runAnalysis() {
+  const data = subjects.map(s => ({...s}));
 
-  // 1. rule-based priority
   data.forEach(d => d.priority = calculatePriority(d));
-
-  // 2. clustering
   const levels = runClustering(data);
   data.forEach((d, i) => d.level = levels[i]);
-
-  // 3. sort by priority desc
   data.sort((a, b) => b.priority - a.priority);
 
   const top = data[0];
 
-  // 4. evaluation: rule-based weak (top 40%) vs ml weak
   const nWeak = Math.max(1, Math.round(data.length * 0.4));
   const ruleWeak = new Set(data.slice(0, nWeak).map(d => d.subject));
   const mlWeak = new Set(data.filter(d => d.level === "Weak").map(d => d.subject));
   const agree = [...ruleWeak].filter(s => mlWeak.has(s));
   const agreementRate = Math.round((agree.length / Math.max(ruleWeak.size, 1)) * 1000) / 10;
 
-  renderResults(data, top, threshold, { ruleWeak, mlWeak, agree, agreementRate });
+  renderResults(data, top, { ruleWeak, mlWeak, agree, agreementRate });
 }
 
-// ============================================================================
-// RENDER
-// ============================================================================
-function renderResults(data, top, threshold, evaluation) {
-  document.getElementById("stepPill").textContent = "step 2 of 2";
+function renderResults(data, top, evaluation) {
+  document.getElementById("introBlock").style.display = "none";
+  document.getElementById("flowContainer").style.display = "none";
+  deskBlock.style.display = "none";
+  actionRow.style.display = "none";
+  document.getElementById("dropZone").style.display = "none";
+  thresholdBlock.style.display = "none";
+  reviewRow.style.display = "none";
   document.getElementById("results").style.display = "block";
-  document.getElementById("inputCard").style.display = "none";
 
-  // verdict
   document.getElementById("verdictSubject").textContent = top.subject;
   document.getElementById("verdictBody").textContent = generateExplanation(top);
 
-  const tagsEl = document.getElementById("verdictTags");
-  tagsEl.innerHTML = `
-    <div class="verdict-tag">score ${top.score}%</div>
-    <div class="verdict-tag">${top.attempts} attempt${top.attempts > 1 ? "s" : ""}</div>
-    <div class="verdict-tag">${top.hours}h studied</div>
-    <div class="verdict-tag">priority ${top.priority}</div>
+  document.getElementById("verdictStats").innerHTML = `
+    <div class="verdict-stat"><div class="n">${top.score}%</div><div class="l">score</div></div>
+    <div class="verdict-stat"><div class="n">${top.attempts}</div><div class="l">attempt${top.attempts > 1 ? "s" : ""}</div></div>
+    <div class="verdict-stat"><div class="n">${top.hours}h</div><div class="l">studied</div></div>
+    <div class="verdict-stat"><div class="n">${top.priority}</div><div class="l">priority</div></div>
   `;
 
-  // practice questions
-  const practiceEl = document.getElementById("practiceList");
-  practiceEl.innerHTML = generateQuestions(top.subject).map(q => `<li>${q}</li>`).join("");
-
-  // table
-  const maxPriority = Math.max(...data.map(d => d.priority));
-  const tbody = document.getElementById("subjectTableBody");
-  tbody.innerHTML = data.map(d => `
-    <tr>
-      <td class="subj-cell">${d.subject}</td>
-      <td>
-        ${d.score}%
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:${d.score}%; background:${COLORS[d.level]}"></div></div>
-      </td>
-      <td>${d.attempts}</td>
-      <td>${d.hours}h</td>
-      <td>${d.priority}</td>
-      <td><span class="level-badge level-${d.level}">${d.level}</span></td>
-    </tr>
+  document.getElementById("practiceList").innerHTML = generateQuestions(top.subject).map((q, i) => `
+    <li><span class="practice-num">${i + 1}</span><span>${q}</span></li>
   `).join("");
 
-  // charts
+  const maxPriority = Math.max(...data.map(d => d.priority));
+  document.getElementById("rankList").innerHTML = `
+    <div class="rank-row head">
+      <span></span><span>Subject</span><span>Score</span><span>Priority</span><span>Level</span>
+    </div>
+    ${data.map((d, i) => `
+      <div class="rank-row">
+        <span class="rank-idx">${i + 1}</span>
+        <span class="rank-subject">${d.subject}</span>
+        <div class="rank-score-cell">
+          <span>${d.score}%</span>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:${d.score}%; background:${COLORS[d.level]}"></div></div>
+        </div>
+        <span>${d.priority}</span>
+        <span class="level-tag level-${d.level}">${d.level}</span>
+      </div>
+    `).join("")}
+  `;
+
   drawBarChart(data, maxPriority);
   drawPieChart(data);
 
-  // evaluation
   document.getElementById("evalRule").textContent = evaluation.ruleWeak.size;
   document.getElementById("evalMl").textContent = evaluation.mlWeak.size;
   document.getElementById("evalAgree").textContent = evaluation.agreementRate + "%";
@@ -1095,11 +1150,11 @@ function renderResults(data, top, threshold, evaluation) {
 
 function drawBarChart(data, maxPriority) {
   const svg = document.getElementById("barChart");
-  const W = 480, H = 260;
-  const padding = { top: 20, right: 10, bottom: 46, left: 10 };
+  const W = 420, H = 230;
+  const padding = { top: 20, right: 6, bottom: 42, left: 6 };
   const chartW = W - padding.left - padding.right;
   const chartH = H - padding.top - padding.bottom;
-  const barGap = 14;
+  const barGap = 12;
   const barW = (chartW - barGap * (data.length - 1)) / data.length;
 
   let bars = "";
@@ -1108,12 +1163,11 @@ function drawBarChart(data, maxPriority) {
     const x = padding.left + i * (barW + barGap);
     const y = padding.top + (chartH - barH);
     bars += `
-      <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="5" fill="${COLORS[d.level]}"></rect>
-      <text x="${x + barW/2}" y="${y - 6}" font-size="11" fill="#1B1F3B" text-anchor="middle" font-weight="600">${d.priority}</text>
-      <text x="${x + barW/2}" y="${H - 26}" font-size="10.5" fill="#6B6F8A" text-anchor="middle">${truncate(d.subject, 10)}</text>
+      <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="${COLORS[d.level]}"></rect>
+      <text x="${x + barW/2}" y="${y - 6}" font-size="11" fill="#1C1B19" text-anchor="middle" font-weight="600">${d.priority}</text>
+      <text x="${x + barW/2}" y="${H - 22}" font-size="10" fill="#8C877D" text-anchor="middle">${truncate(d.subject, 9)}</text>
     `;
   });
-
   svg.innerHTML = bars;
 }
 
@@ -1127,11 +1181,11 @@ function drawPieChart(data) {
   data.forEach(d => counts[d.level]++);
 
   const total = data.length;
-  const cx = 130, cy = 120, r = 85;
+  const cx = 120, cy = 105, r = 78;
   let startAngle = -Math.PI / 2;
   let slices = "";
   let legend = "";
-  let legendY = 220;
+  let legendY = 205;
 
   Object.entries(counts).forEach(([level, count]) => {
     if (count === 0) return;
@@ -1146,26 +1200,28 @@ function drawPieChart(data) {
     startAngle = endAngle;
   });
 
-  let legendX = 20;
+  let legendX = 8;
   Object.entries(counts).forEach(([level, count]) => {
     if (count === 0) return;
     legend += `
-      <rect x="${legendX}" y="${legendY}" width="10" height="10" rx="2" fill="${COLORS[level]}"></rect>
-      <text x="${legendX + 16}" y="${legendY + 9}" font-size="11" fill="#1B1F3B">${level} (${count})</text>
+      <rect x="${legendX}" y="${legendY}" width="9" height="9" rx="2" fill="${COLORS[level]}"></rect>
+      <text x="${legendX + 14}" y="${legendY + 8.5}" font-size="10.5" fill="#1C1B19">${level} (${count})</text>
     `;
-    legendX += 90;
+    legendX += 82;
   });
 
   svg.innerHTML = slices + legend;
 }
 
-// ============================================================================
-// RESTART
-// ============================================================================
 document.getElementById("restartBtn").addEventListener("click", () => {
+  subjects = [];
+  uploadedData = null;
   document.getElementById("results").style.display = "none";
-  document.getElementById("inputCard").style.display = "block";
-  document.getElementById("stepPill").textContent = "step 1 of 2";
+  document.getElementById("introBlock").style.display = "block";
+  document.getElementById("flowContainer").style.display = "block";
+  actionRow.style.display = "flex";
+  renderPrompt();
+  renderDesk();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 </script>
