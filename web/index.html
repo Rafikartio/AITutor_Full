@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentor — Your AI Study Tutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1F3B;
+    --indigo:#3B4CCA;
+    --indigo-deep:#2A3494;
+    --paper:#FAF8F4;
+    --paper-raised:#FFFFFF;
+    --line:#E4E1D8;
+    --weak:#C1443A;
+    --weak-bg:#FBEBE9;
+    --medium:#C8862B;
+    --medium-bg:#FBF1E2;
+    --strong:#2F7A52;
+    --strong-bg:#E9F5EE;
+    --muted:#6B6F8A;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+    line-height:1.5;
+  }
+
+  /* subtle paper grain */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:radial-gradient(var(--line) 1px, transparent 1px);
+    background-size:26px 26px;
+    opacity:0.35;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .shell{
+    position:relative;
+    z-index:1;
+    max-width:920px;
+    margin:0 auto;
+    padding:56px 24px 100px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:48px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-mark{
+    width:38px; height:38px;
+    border-radius:10px;
+    background:var(--indigo);
+    display:flex; align-items:center; justify-content:center;
+    color:white;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:19px;
+    flex-shrink:0;
+  }
+  .brand-name{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:-0.01em;
+  }
+  .brand-tag{
+    font-size:12px;
+    color:var(--muted);
+    font-family:var(--font-mono);
+    letter-spacing:0.02em;
+  }
+
+  .step-pill{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:20px;
+    background:var(--paper-raised);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    margin-bottom:44px;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(32px, 5vw, 44px);
+    line-height:1.12;
+    letter-spacing:-0.015em;
+    margin-bottom:14px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--indigo);
+  }
+  .hero p{
+    font-size:16px;
+    color:var(--muted);
+    max-width:520px;
+  }
+
+  /* ---------- CARD ---------- */
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:32px;
+    margin-bottom:28px;
+    box-shadow:0 1px 2px rgba(27,31,59,0.04);
+  }
+  .card-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .card-head h2{
+    font-family:var(--font-display);
+    font-size:21px;
+    font-weight:600;
+  }
+  .card-head .hint{
+    font-size:12.5px;
+    color:var(--muted);
+    font-family:var(--font-mono);
+  }
+
+  /* ---------- INPUT MODE TABS ---------- */
+  .mode-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+  .mode-tab{
+    font-family:var(--font-body);
+    font-size:13.5px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    transition:all 0.15s ease;
+  }
+  .mode-tab:hover{ border-color:var(--indigo); }
+  .mode-tab.active{
+    background:var(--indigo);
+    border-color:var(--indigo);
+    color:white;
+  }
+
+  /* ---------- SUBJECT ROWS ---------- */
+  .rows-head{
+    display:grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 34px;
+    gap:12px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--muted);
+    padding:0 4px 8px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:12px;
+  }
+  #subjectRows{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .subject-row{
+    display:grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 34px;
+    gap:12px;
+    align-items:center;
+  }
+  .subject-row input{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:14px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper);
+    color:var(--ink);
+    transition:border-color 0.15s ease;
+  }
+  .subject-row input:focus{
+    outline:none;
+    border-color:var(--indigo);
+    background:white;
+  }
+  .remove-row{
+    width:34px; height:34px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--muted);
+    cursor:pointer;
+    font-size:16px;
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.15s ease;
+  }
+  .remove-row:hover{
+    border-color:var(--weak);
+    color:var(--weak);
+    background:var(--weak-bg);
+  }
+
+  .row-actions{
+    display:flex;
+    gap:10px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .btn-ghost{
+    font-family:var(--font-body);
+    font-size:13.5px;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    transition:all 0.15s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--indigo); color:var(--indigo); }
+
+  .upload-zone{
+    border:1.5px dashed var(--line);
+    border-radius:12px;
+    padding:36px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:all 0.15s ease;
+  }
+  .upload-zone:hover{
+    border-color:var(--indigo);
+    background:#F5F6FF;
+  }
+  .upload-zone p{ font-size:14px; color:var(--muted); }
+  .upload-zone strong{ color:var(--indigo); }
+  .upload-zone input{ display:none; }
+
+  .field-error{
+    background:var(--weak-bg);
+    border:1px solid #F0C9C5;
+    color:var(--weak);
+    font-size:13px;
+    padding:12px 14px;
+    border-radius:9px;
+    margin-top:8px;
+    display:none;
+  }
+
+  /* ---------- SETTINGS ---------- */
+  .settings-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:14px 0;
+    border-top:1px solid var(--line);
+    margin-top:8px;
+  }
+  .settings-label{
+    font-size:14px;
+    font-weight:500;
+  }
+  .settings-label span{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    font-weight:400;
+    margin-top:2px;
+  }
+  input[type="range"]{
+    width:180px;
+    accent-color:var(--indigo);
+  }
+  .range-value{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--indigo);
+    font-weight:600;
+    min-width:40px;
+    text-align:right;
+  }
+
+  /* ---------- PRIMARY CTA ---------- */
+  .btn-primary{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:15.5px;
+    font-weight:700;
+    padding:16px;
+    border-radius:11px;
+    border:none;
+    background:var(--indigo);
+    color:white;
+    cursor:pointer;
+    margin-top:20px;
+    transition:all 0.15s ease;
+    letter-spacing:0.01em;
+  }
+  .btn-primary:hover{ background:var(--indigo-deep); }
+  .btn-primary:active{ transform:scale(0.995); }
+  .btn-primary:disabled{ opacity:0.5; cursor:not-allowed; }
+
+  /* ---------- LOADING ---------- */
+  .loading-wrap{
+    display:none;
+    align-items:center;
+    gap:12px;
+    padding:20px 0 4px;
+    justify-content:center;
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--muted);
+  }
+  .spinner{
+    width:16px; height:16px;
+    border:2px solid var(--line);
+    border-top-color:var(--indigo);
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ---------- RESULTS ---------- */
+  #results{ display:none; }
+
+  .verdict-card{
+    background:var(--ink);
+    border-radius:18px;
+    padding:36px;
+    color:#F4F3FA;
+    margin-bottom:28px;
+    position:relative;
+    overflow:hidden;
+  }
+  .verdict-card::before{
+    content:"";
+    position:absolute;
+    top:-60px; right:-60px;
+    width:220px; height:220px;
+    background:radial-gradient(circle, rgba(59,76,202,0.35), transparent 70%);
+  }
+  .verdict-eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#9BA3E8;
+    margin-bottom:14px;
+    position:relative;
+  }
+  .verdict-title{
+    font-family:var(--font-display);
+    font-size:clamp(24px, 3.6vw, 32px);
+    font-weight:600;
+    line-height:1.25;
+    margin-bottom:16px;
+    position:relative;
+  }
+  .verdict-title .subject-name{
+    color:#B9C1FF;
+    font-style:italic;
+  }
+  .verdict-body{
+    font-size:15px;
+    color:#D7D8EA;
+    line-height:1.65;
+    max-width:640px;
+    position:relative;
+  }
+  .verdict-tags{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+    flex-wrap:wrap;
+    position:relative;
+  }
+  .verdict-tag{
+    font-family:var(--font-mono);
+    font-size:12px;
+    padding:6px 12px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.14);
+  }
+
+  /* practice questions */
+  .practice-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:16px;
+  }
+  .practice-list li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    font-size:14px;
+    padding:12px 14px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+  .practice-list li::before{
+    content:"→";
+    color:var(--indigo);
+    font-weight:700;
+    flex-shrink:0;
+  }
+
+  /* ---------- SUBJECT TABLE ---------- */
+  .subject-table{ width:100%; border-collapse:collapse; }
+  .subject-table th{
+    font-family:var(--font-mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--muted);
+    text-align:left;
+    padding:0 10px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .subject-table td{
+    padding:14px 10px;
+    border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .subject-table tr:last-child td{ border-bottom:none; }
+  .subj-cell{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:600;
+  }
+  .level-badge{
+    font-family:var(--font-mono);
+    font-size:11px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    display:inline-block;
+  }
+  .level-Weak{ background:var(--weak-bg); color:var(--weak); }
+  .level-Medium{ background:var(--medium-bg); color:var(--medium); }
+  .level-Strong{ background:var(--strong-bg); color:var(--strong); }
+
+  .score-bar-track{
+    width:100%;
+    height:6px;
+    background:var(--line);
+    border-radius:4px;
+    overflow:hidden;
+    margin-top:6px;
+  }
+  .score-bar-fill{
+    height:100%;
+    border-radius:4px;
+  }
+
+  /* ---------- CHARTS ---------- */
+  .chart-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap:24px;
+  }
+  @media (max-width:720px){
+    .chart-grid{ grid-template-columns:1fr; }
+    .rows-head{ display:none; }
+    .subject-row{ grid-template-columns:1fr; gap:6px; padding:12px; border:1px solid var(--line); border-radius:10px; }
+    .remove-row{ justify-self:end; }
+  }
+
+  svg text{ font-family:var(--font-body); }
+
+  /* ---------- EVAL PANEL ---------- */
+  .eval-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+    margin-bottom:20px;
+  }
+  .eval-stat{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px;
+    text-align:center;
+  }
+  .eval-stat .num{
+    font-family:var(--font-display);
+    font-size:28px;
+    font-weight:600;
+    color:var(--indigo);
+  }
+  .eval-stat .lbl{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+  @media (max-width:600px){ .eval-grid{ grid-template-columns:1fr; } }
+
+  .eval-detail{
+    font-size:13.5px;
+    color:var(--muted);
+    padding:10px 0;
+    border-top:1px solid var(--line);
+  }
+  .eval-detail b{ color:var(--ink); }
+
+  details.why{
+    margin-top:16px;
+    font-size:13.5px;
+    color:var(--muted);
+  }
+  details.why summary{
+    cursor:pointer;
+    color:var(--indigo);
+    font-weight:600;
+    font-size:13.5px;
+  }
+  details.why p{ margin-top:10px; line-height:1.6; }
+
+  footer{
+    text-align:center;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+    margin-top:40px;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <div class="brand-name">Mentor</div>
+        <div class="brand-tag">ai study tutor</div>
+      </div>
+    </div>
+    <div class="step-pill" id="stepPill">step 1 of 2</div>
+  </header>
+
+  <div class="hero">
+    <h1>Tell me your scores.<br>I'll tell you what to <em>study next</em>.</h1>
+    <p>Enter your own subjects and quiz results below. Mentor ranks them, spots where you're struggling, and explains exactly why — no generic dataset, just your own marksheet.</p>
+  </div>
+
+  <!-- INPUT CARD -->
+  <div class="card" id="inputCard">
+    <div class="card-head">
+      <h2>Your marksheet</h2>
+      <div class="hint">3–10 subjects recommended</div>
+    </div>
+
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="manual">✏️ Enter manually</button>
+      <button class="mode-tab" data-mode="demo">⚡ Try demo data</button>
+      <button class="mode-tab" data-mode="upload">📄 Upload CSV</button>
+    </div>
+
+    <!-- MANUAL MODE -->
+    <div id="manualMode">
+      <div class="rows-head">
+        <div>Subject</div><div>Quiz score (%)</div><div>Hours studied</div><div>Attempts</div><div></div>
+      </div>
+      <div id="subjectRows"></div>
+      <div class="row-actions">
+        <button class="btn-ghost" id="addRowBtn">+ Add subject</button>
+      </div>
+    </div>
+
+    <!-- UPLOAD MODE -->
+    <div id="uploadMode" style="display:none;">
+      <label class="upload-zone" for="csvInput">
+        <p><strong>Click to upload</strong> or drag your CSV here</p>
+        <p style="margin-top:6px; font-family:var(--font-mono); font-size:12px;">columns: subject, quiz_score, hours_studied, attempts</p>
+        <input type="file" id="csvInput" accept=".csv">
+      </label>
+      <div id="uploadStatus" style="margin-top:12px; font-size:13.5px; color:var(--muted);"></div>
+    </div>
+
+    <div class="field-error" id="fieldError"></div>
+
+    <div class="settings-row">
+      <div class="settings-label">
+        Weak-score threshold
+        <span>Scores below this are treated as struggling</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <input type="range" id="thresholdSlider" min="30" max="90" value="60">
+        <span class="range-value" id="thresholdValue">60%</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="analyseBtn">Ask Mentor to review my subjects</button>
+
+    <div class="loading-wrap" id="loadingWrap">
+      <div class="spinner"></div>
+      <span id="loadingText">Reading your marksheet…</span>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div class="verdict-card">
+      <div class="verdict-eyebrow">Mentor's verdict</div>
+      <div class="verdict-title">You should focus on <span class="subject-name" id="verdictSubject">—</span> next.</div>
+      <div class="verdict-body" id="verdictBody">—</div>
+      <div class="verdict-tags" id="verdictTags"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Where to practice</h2>
+        <div class="hint">auto-generated</div>
+      </div>
+      <ul class="practice-list" id="practiceList"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>All your subjects, ranked</h2>
+        <div class="hint">most urgent first</div>
+      </div>
+      <table class="subject-table" id="subjectTable">
+        <thead>
+          <tr><th>Subject</th><th>Score</th><th>Attempts</th><th>Hours</th><th>Priority</th><th>Level</th></tr>
+        </thead>
+        <tbody id="subjectTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Visual breakdown</h2>
+        <div class="hint">priority + distribution</div>
+      </div>
+      <div class="chart-grid">
+        <div>
+          <svg id="barChart" viewBox="0 0 480 260" width="100%"></svg>
+        </div>
+        <div>
+          <svg id="pieChart" viewBox="0 0 260 260" width="100%"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>How confident is this?</h2>
+        <div class="hint">rule-based vs clustering</div>
+      </div>
+      <div class="eval-grid">
+        <div class="eval-stat"><div class="num" id="evalRule">0</div><div class="lbl">flagged weak by rules</div></div>
+        <div class="eval-stat"><div class="num" id="evalMl">0</div><div class="lbl">flagged weak by clustering</div></div>
+        <div class="eval-stat"><div class="num" id="evalAgree">0%</div><div class="lbl">agreement rate</div></div>
+      </div>
+      <div class="eval-detail"><b>Rule-based flags:</b> <span id="evalRuleList">—</span></div>
+      <div class="eval-detail"><b>Clustering flags:</b> <span id="evalMlList">—</span></div>
+      <div class="eval-detail"><b>Both agree on:</b> <span id="evalAgreeList">—</span></div>
+
+      <details class="why">
+        <summary>Why clustering instead of a Decision Tree?</summary>
+        <p>Decision Trees are supervised models — they need many pre-labeled training examples to learn from. With only one student's handful of subjects, there isn't nearly enough data to train and test one properly. Mentor instead uses K-means clustering, an unsupervised method that groups your subjects into Weak / Medium / Strong purely from the patterns in score, attempts, and hours — no labeled training data required.</p>
+      </details>
+    </div>
+
+    <button class="btn-ghost" id="restartBtn" style="width:100%; padding:14px;">↺ Analyse a different marksheet</button>
+  </div>
+
+  <footer>Mentor — Rule-based scoring + K-means clustering, running entirely in your browser</footer>
+</div>
+
+<script>
+// ============================================================================
+// STATE
+// ============================================================================
+let currentMode = "manual";
+let uploadedData = null;
+const COLORS = { Weak: "#C1443A", Medium: "#C8862B", Strong: "#2F7A52" };
+const COLOR_BG = { Weak: "#FBEBE9", Medium: "#FBF1E2", Strong: "#E9F5EE" };
+
+// ============================================================================
+// MANUAL ROW MANAGEMENT
+// ============================================================================
+const subjectRowsEl = document.getElementById("subjectRows");
+let rowCount = 0;
+
+function addRow(subject = "", score = "", hours = "", attempts = "") {
+  rowCount++;
+  const row = document.createElement("div");
+  row.className = "subject-row";
+  row.innerHTML = `
+    <input type="text" placeholder="e.g. Math" value="${subject}" data-field="subject">
+    <input type="number" placeholder="0-100" min="0" max="100" value="${score}" data-field="score">
+    <input type="number" placeholder="hrs" min="0" step="0.5" value="${hours}" data-field="hours">
+    <input type="number" placeholder="tries" min="1" step="1" value="${attempts}" data-field="attempts">
+    <button class="remove-row" title="Remove subject">×</button>
+  `;
+  row.querySelector(".remove-row").addEventListener("click", () => {
+    row.remove();
+  });
+  subjectRowsEl.appendChild(row);
+}
+
+// seed with 3 empty rows
+addRow("Math", 45, 2, 4);
+addRow("Physics", 78, 3, 1);
+addRow("English", 90, 1, 1);
+
+document.getElementById("addRowBtn").addEventListener("click", () => addRow());
+
+// ============================================================================
+// MODE TABS
+// ============================================================================
+document.querySelectorAll(".mode-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".mode-tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    currentMode = tab.dataset.mode;
+
+    document.getElementById("manualMode").style.display = currentMode === "manual" ? "block" : "none";
+    document.getElementById("uploadMode").style.display = currentMode === "upload" ? "block" : "none";
+
+    if (currentMode === "demo") {
+      subjectRowsEl.innerHTML = "";
+      addRow("Math", 45, 2, 4);
+      addRow("Physics", 78, 3, 1);
+      addRow("English", 90, 1, 1);
+      addRow("Computer Science", 52, 4, 5);
+      addRow("Chemistry", 65, 2, 2);
+      document.getElementById("manualMode").style.display = "block";
+    }
+  });
+});
+
+// ============================================================================
+// CSV UPLOAD
+// ============================================================================
+document.getElementById("csvInput").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try {
+      const rows = parseCSV(evt.target.result);
+      uploadedData = rows;
+      document.getElementById("uploadStatus").innerHTML =
+        `✓ Loaded <b>${rows.length}</b> subjects from <b>${file.name}</b>`;
+    } catch (err) {
+      document.getElementById("uploadStatus").innerHTML =
+        `<span style="color:var(--weak)">Could not read file: ${err.message}</span>`;
+    }
+  };
+  reader.readAsText(file);
+});
+
+function parseCSV(text) {
+  const lines = text.trim().split("\n").filter(l => l.trim());
+  const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+  const required = ["subject", "quiz_score", "hours_studied", "attempts"];
+  for (const r of required) {
+    if (!headers.includes(r)) throw new Error(`missing column "${r}"`);
+  }
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(",").map(v => v.trim());
+    const obj = {};
+    headers.forEach((h, idx) => obj[h] = vals[idx]);
+    rows.push({
+      subject: obj["subject"],
+      score: parseFloat(obj["quiz_score"]),
+      hours: parseFloat(obj["hours_studied"]),
+      attempts: parseInt(obj["attempts"]),
+    });
+  }
+  return rows;
+}
+
+// ============================================================================
+// THRESHOLD SLIDER
+// ============================================================================
+const thresholdSlider = document.getElementById("thresholdSlider");
+const thresholdValue = document.getElementById("thresholdValue");
+thresholdSlider.addEventListener("input", () => {
+  thresholdValue.textContent = thresholdSlider.value + "%";
+});
+
+// ============================================================================
+// GATHER INPUT
+// ============================================================================
+function gatherData() {
+  if (currentMode === "upload") {
+    if (!uploadedData) throw new Error("Please upload a CSV file first.");
+    return uploadedData;
+  }
+  const rows = [...subjectRowsEl.querySelectorAll(".subject-row")];
+  const data = rows.map(row => {
+    const inputs = row.querySelectorAll("input");
+    return {
+      subject: inputs[0].value.trim(),
+      score: parseFloat(inputs[1].value),
+      hours: parseFloat(inputs[2].value),
+      attempts: parseInt(inputs[3].value),
+    };
+  });
+  return data;
+}
+
+function validateData(data) {
+  const errors = [];
+  if (!data || data.length === 0) {
+    errors.push("Add at least one subject.");
+    return errors;
+  }
+  data.forEach((d, i) => {
+    const label = d.subject || `Row ${i + 1}`;
+    if (!d.subject) errors.push(`Row ${i + 1} is missing a subject name.`);
+    if (isNaN(d.score) || d.score < 0 || d.score > 100) errors.push(`${label}: score must be 0–100.`);
+    if (isNaN(d.hours) || d.hours < 0) errors.push(`${label}: hours studied can't be negative.`);
+    if (isNaN(d.attempts) || d.attempts < 1) errors.push(`${label}: attempts must be at least 1.`);
+  });
+  return errors;
+}
+
+// ============================================================================
+// AI LOGIC: RULE-BASED PRIORITY SCORE
+// ============================================================================
+function calculatePriority(d) {
+  const scoreGap = (100 - d.score) * 0.5;
+  const attemptPenalty = d.attempts * 8;
+  const effortPenalty = d.hours * 3;
+  return Math.round((scoreGap + attemptPenalty + effortPenalty) * 100) / 100;
+}
+
+// ============================================================================
+// AI LOGIC: K-MEANS CLUSTERING (k=3, simple JS implementation)
+// ============================================================================
+function normalize(values) {
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = max - min || 1;
+  return values.map(v => (v - min) / range);
+}
+
+function kmeans(points, k, iterations = 50) {
+  // points: array of [x,y,z]
+  k = Math.min(k, points.length);
+  // init centroids as first k points (deterministic-ish for small n)
+  let centroids = points.slice(0, k).map(p => [...p]);
+  let assignments = new Array(points.length).fill(0);
+
+  for (let iter = 0; iter < iterations; iter++) {
+    // assign
+    let changed = false;
+    for (let i = 0; i < points.length; i++) {
+      let bestDist = Infinity, bestC = 0;
+      for (let c = 0; c < k; c++) {
+        const d = euclidean(points[i], centroids[c]);
+        if (d < bestDist) { bestDist = d; bestC = c; }
+      }
+      if (assignments[i] !== bestC) changed = true;
+      assignments[i] = bestC;
+    }
+    // update
+    for (let c = 0; c < k; c++) {
+      const members = points.filter((_, i) => assignments[i] === c);
+      if (members.length === 0) continue;
+      const dims = points[0].length;
+      const newCentroid = new Array(dims).fill(0);
+      members.forEach(m => m.forEach((v, d) => newCentroid[d] += v));
+      centroids[c] = newCentroid.map(v => v / members.length);
+    }
+    if (!changed) break;
+  }
+  return assignments;
+}
+
+function euclidean(a, b) {
+  return Math.sqrt(a.reduce((sum, v, i) => sum + (v - b[i]) ** 2, 0));
+}
+
+function runClustering(data) {
+  const scores = normalize(data.map(d => d.score));
+  const hours = normalize(data.map(d => d.hours));
+  const attempts = normalize(data.map(d => d.attempts));
+  const points = data.map((_, i) => [scores[i], hours[i], attempts[i]]);
+
+  const k = Math.min(3, data.length);
+  const assignments = kmeans(points, k);
+
+  // label clusters by average quiz_score: lowest = Weak
+  const clusterScores = {};
+  const clusterCounts = {};
+  assignments.forEach((c, i) => {
+    clusterScores[c] = (clusterScores[c] || 0) + data[i].score;
+    clusterCounts[c] = (clusterCounts[c] || 0) + 1;
+  });
+  const clusterAvg = Object.keys(clusterScores).map(c => ({
+    cluster: c, avg: clusterScores[c] / clusterCounts[c]
+  })).sort((a, b) => a.avg - b.avg);
+
+  const labelNames = ["Weak", "Medium", "Strong"].slice(0, k);
+  const clusterToLabel = {};
+  clusterAvg.forEach((c, i) => clusterToLabel[c.cluster] = labelNames[i]);
+
+  return assignments.map(c => clusterToLabel[c]);
+}
+
+// ============================================================================
+// EXPLANATIONS
+// ============================================================================
+function generateExplanation(top) {
+  return `Your score in ${top.subject} is ${top.score}%, which Mentor's clustering classifies as "${top.level}" performance. ` +
+    `You've attempted it ${top.attempts} time${top.attempts > 1 ? "s" : ""} and studied it for ${top.hours} hour${top.hours != 1 ? "s" : ""} so far. ` +
+    `That combination — low results despite real effort — gives it the highest priority score of all your subjects: ${top.priority}. ` +
+    `Put your next study session here before anywhere else.`;
+}
+
+function generateQuestions(subject) {
+  return [
+    `Review the core definitions and key terms in ${subject}.`,
+    `Attempt 5 fresh practice problems focused on ${subject} fundamentals.`,
+    `Re-read your ${subject} notes and summarise the topic in your own words — teaching it back is the fastest way to find gaps.`,
+  ];
+}
+
+// ============================================================================
+// MAIN PIPELINE
+// ============================================================================
+document.getElementById("analyseBtn").addEventListener("click", () => {
+  const errorBox = document.getElementById("fieldError");
+  errorBox.style.display = "none";
+
+  let data;
+  try {
+    data = gatherData();
+  } catch (err) {
+    errorBox.textContent = err.message;
+    errorBox.style.display = "block";
+    return;
+  }
+
+  const errors = validateData(data);
+  if (errors.length > 0) {
+    errorBox.innerHTML = errors.map(e => `• ${e}`).join("<br>");
+    errorBox.style.display = "block";
+    return;
+  }
+
+  // loading sequence
+  const loadingWrap = document.getElementById("loadingWrap");
+  const loadingText = document.getElementById("loadingText");
+  const analyseBtn = document.getElementById("analyseBtn");
+  analyseBtn.disabled = true;
+  loadingWrap.style.display = "flex";
+
+  const messages = ["Reading your marksheet…", "Scoring each subject…", "Clustering performance levels…", "Writing your verdict…"];
+  let step = 0;
+  loadingText.textContent = messages[0];
+  const interval = setInterval(() => {
+    step++;
+    if (step < messages.length) loadingText.textContent = messages[step];
+  }, 380);
+
+  setTimeout(() => {
+    clearInterval(interval);
+    loadingWrap.style.display = "none";
+    analyseBtn.disabled = false;
+    runAnalysis(data);
+  }, 1600);
+});
+
+function runAnalysis(data) {
+  const threshold = parseInt(thresholdSlider.value);
+
+  // 1. rule-based priority
+  data.forEach(d => d.priority = calculatePriority(d));
+
+  // 2. clustering
+  const levels = runClustering(data);
+  data.forEach((d, i) => d.level = levels[i]);
+
+  // 3. sort by priority desc
+  data.sort((a, b) => b.priority - a.priority);
+
+  const top = data[0];
+
+  // 4. evaluation: rule-based weak (top 40%) vs ml weak
+  const nWeak = Math.max(1, Math.round(data.length * 0.4));
+  const ruleWeak = new Set(data.slice(0, nWeak).map(d => d.subject));
+  const mlWeak = new Set(data.filter(d => d.level === "Weak").map(d => d.subject));
+  const agree = [...ruleWeak].filter(s => mlWeak.has(s));
+  const agreementRate = Math.round((agree.length / Math.max(ruleWeak.size, 1)) * 1000) / 10;
+
+  renderResults(data, top, threshold, { ruleWeak, mlWeak, agree, agreementRate });
+}
+
+// ============================================================================
+// RENDER
+// ============================================================================
+function renderResults(data, top, threshold, evaluation) {
+  document.getElementById("stepPill").textContent = "step 2 of 2";
+  document.getElementById("results").style.display = "block";
+  document.getElementById("inputCard").style.display = "none";
+
+  // verdict
+  document.getElementById("verdictSubject").textContent = top.subject;
+  document.getElementById("verdictBody").textContent = generateExplanation(top);
+
+  const tagsEl = document.getElementById("verdictTags");
+  tagsEl.innerHTML = `
+    <div class="verdict-tag">score ${top.score}%</div>
+    <div class="verdict-tag">${top.attempts} attempt${top.attempts > 1 ? "s" : ""}</div>
+    <div class="verdict-tag">${top.hours}h studied</div>
+    <div class="verdict-tag">priority ${top.priority}</div>
+  `;
+
+  // practice questions
+  const practiceEl = document.getElementById("practiceList");
+  practiceEl.innerHTML = generateQuestions(top.subject).map(q => `<li>${q}</li>`).join("");
+
+  // table
+  const maxPriority = Math.max(...data.map(d => d.priority));
+  const tbody = document.getElementById("subjectTableBody");
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td class="subj-cell">${d.subject}</td>
+      <td>
+        ${d.score}%
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:${d.score}%; background:${COLORS[d.level]}"></div></div>
+      </td>
+      <td>${d.attempts}</td>
+      <td>${d.hours}h</td>
+      <td>${d.priority}</td>
+      <td><span class="level-badge level-${d.level}">${d.level}</span></td>
+    </tr>
+  `).join("");
+
+  // charts
+  drawBarChart(data, maxPriority);
+  drawPieChart(data);
+
+  // evaluation
+  document.getElementById("evalRule").textContent = evaluation.ruleWeak.size;
+  document.getElementById("evalMl").textContent = evaluation.mlWeak.size;
+  document.getElementById("evalAgree").textContent = evaluation.agreementRate + "%";
+  document.getElementById("evalRuleList").textContent = [...evaluation.ruleWeak].join(", ") || "none";
+  document.getElementById("evalMlList").textContent = [...evaluation.mlWeak].join(", ") || "none";
+  document.getElementById("evalAgreeList").textContent = evaluation.agree.join(", ") || "none";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function drawBarChart(data, maxPriority) {
+  const svg = document.getElementById("barChart");
+  const W = 480, H = 260;
+  const padding = { top: 20, right: 10, bottom: 46, left: 10 };
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+  const barGap = 14;
+  const barW = (chartW - barGap * (data.length - 1)) / data.length;
+
+  let bars = "";
+  data.forEach((d, i) => {
+    const barH = (d.priority / maxPriority) * chartH;
+    const x = padding.left + i * (barW + barGap);
+    const y = padding.top + (chartH - barH);
+    bars += `
+      <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="5" fill="${COLORS[d.level]}"></rect>
+      <text x="${x + barW/2}" y="${y - 6}" font-size="11" fill="#1B1F3B" text-anchor="middle" font-weight="600">${d.priority}</text>
+      <text x="${x + barW/2}" y="${H - 26}" font-size="10.5" fill="#6B6F8A" text-anchor="middle">${truncate(d.subject, 10)}</text>
+    `;
+  });
+
+  svg.innerHTML = bars;
+}
+
+function truncate(str, n) {
+  return str.length > n ? str.slice(0, n - 1) + "…" : str;
+}
+
+function drawPieChart(data) {
+  const svg = document.getElementById("pieChart");
+  const counts = { Weak: 0, Medium: 0, Strong: 0 };
+  data.forEach(d => counts[d.level]++);
+
+  const total = data.length;
+  const cx = 130, cy = 120, r = 85;
+  let startAngle = -Math.PI / 2;
+  let slices = "";
+  let legend = "";
+  let legendY = 220;
+
+  Object.entries(counts).forEach(([level, count]) => {
+    if (count === 0) return;
+    const angle = (count / total) * Math.PI * 2;
+    const endAngle = startAngle + angle;
+    const x1 = cx + r * Math.cos(startAngle);
+    const y1 = cy + r * Math.sin(startAngle);
+    const x2 = cx + r * Math.cos(endAngle);
+    const y2 = cy + r * Math.sin(endAngle);
+    const largeArc = angle > Math.PI ? 1 : 0;
+    slices += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${largeArc} 1 ${x2},${y2} Z" fill="${COLORS[level]}"></path>`;
+    startAngle = endAngle;
+  });
+
+  let legendX = 20;
+  Object.entries(counts).forEach(([level, count]) => {
+    if (count === 0) return;
+    legend += `
+      <rect x="${legendX}" y="${legendY}" width="10" height="10" rx="2" fill="${COLORS[level]}"></rect>
+      <text x="${legendX + 16}" y="${legendY + 9}" font-size="11" fill="#1B1F3B">${level} (${count})</text>
+    `;
+    legendX += 90;
+  });
+
+  svg.innerHTML = slices + legend;
+}
+
+// ============================================================================
+// RESTART
+// ============================================================================
+document.getElementById("restartBtn").addEventListener("click", () => {
+  document.getElementById("results").style.display = "none";
+  document.getElementById("inputCard").style.display = "block";
+  document.getElementById("stepPill").textContent = "step 1 of 2";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+</body>
+</html>
