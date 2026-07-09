@@ -1,5 +1,5 @@
 # 🎓 AI Tutor App — "Mentor"
-
+this is add from me
 A personalized study recommendation system. It analyses **one student's own
 marksheet** (quiz scores, hours studied, attempts) and tells them which
 subject needs the most attention next — with charts and a plain-language
