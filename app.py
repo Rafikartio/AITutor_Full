@@ -15,16 +15,16 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root{
-    --bg:#F7F8FB;
+    --bg:#F6F8FA;
     --card:#FFFFFF;
     --card-hover:#FBFBFE;
     --ink:#12131A;
     --ink-soft:#565C6B;
     --ink-faint:#9AA0AD;
     --border:#E7E9F0;
-    --accent:#5B5BF6;
-    --accent-soft:#EEEDFF;
-    --accent-hover:#4747E0;
+    --accent:#1F8A70;
+    --accent-soft:#E4F5EF;
+    --accent-hover:#166F59;
     --weak:#E1533F;
     --weak-bg:#FDECEA;
     --medium:#DB9A2A;
@@ -130,7 +130,7 @@ hr{
     background:var(--accent) !important;
     color:#FFFFFF !important;
     padding:0.6rem 1rem !important;
-    box-shadow:0 4px 14px -6px rgba(91,91,246,0.55);
+    box-shadow:0 4px 14px -6px rgba(31,138,112,0.55);
     transition:all 0.15s ease;
 }
 .stButton button:hover,
@@ -193,19 +193,19 @@ div[data-testid="stTabs"] [data-baseweb="tab-highlight"]{
 
 /* ---------- Verdict hero ---------- */
 .verdict-box{
-    background:linear-gradient(135deg, #17182B 0%, #23244A 100%);
+    background:linear-gradient(135deg, #10231F 0%, #1B3A32 100%);
     color:#F4F4FA;
     padding:32px 36px;
     border-radius:18px;
     margin-bottom:8px;
-    box-shadow:0 20px 40px -20px rgba(23,24,43,0.55);
+    box-shadow:0 20px 40px -20px rgba(16,35,31,0.55);
 }
 .verdict-kicker{
     font-size:11px;
     font-weight:700;
     letter-spacing:0.08em;
     text-transform:uppercase;
-    color:#A9A6F6;
+    color:#7FD9BE;
     margin-bottom:12px;
 }
 .verdict-title{
@@ -217,7 +217,7 @@ div[data-testid="stTabs"] [data-baseweb="tab-highlight"]{
 }
 .verdict-title em{
     font-style:normal;
-    color:#B9B6FF;
+    color:#9DEBD3;
 }
 .verdict-body{
     font-size:14.5px;
@@ -285,16 +285,16 @@ PLOTLY_TEMPLATE = dict(
 # HEADER
 # ----------------------------------------------------------------------------
 st.markdown('<div class="pill">🎓 Office Hours</div>', unsafe_allow_html=True)
-st.title("Your AI Study Mentor")
-st.caption("Rule-based scoring + K-means clustering — tells you which subject needs your attention most, and why.")
+st.title("Your Personal Study Coach")
+st.caption("Rule-based scoring + K-means clustering — tells you which subject deserves your next study session, and why.")
 
 # ----------------------------------------------------------------------------
 # SIDEBAR — data input
 # ----------------------------------------------------------------------------
-st.sidebar.markdown("### 📋 Your marksheet")
+st.sidebar.markdown("### 📋 Your Marksheet")
 
 input_method = st.sidebar.radio(
-    "How do you want to enter your subjects?",
+    "How would you like to add your subjects?",
     ["Use Demo Data", "Upload CSV", "Enter Manually"],
     label_visibility="collapsed",
 )
@@ -341,12 +341,12 @@ weak_fraction = st.sidebar.slider(
 )
 
 st.sidebar.markdown("---")
-run_button = st.sidebar.button("✨ Ask for my recommendation", type="primary", use_container_width=True)
+run_button = st.sidebar.button("✨ Get My Recommendation", type="primary", use_container_width=True)
 
 # ----------------------------------------------------------------------------
 # MARKSHEET
 # ----------------------------------------------------------------------------
-st.subheader("Your marksheet")
+st.subheader("Your Marksheet")
 
 with st.container():
     if input_method == "Enter Manually":
@@ -393,8 +393,8 @@ if run_button:
             # ---- Verdict hero ----
             st.markdown(f"""
             <div class="verdict-box">
-                <div class="verdict-kicker">My read on things</div>
-                <div class="verdict-title">You should put your next session into <em>{top['subject']}</em>.</div>
+                <div class="verdict-kicker">Here's my take</div>
+                <div class="verdict-title">Focus your next session on <em>{top['subject']}</em>.</div>
                 <div class="verdict-body">{result['explanation']}</div>
             </div>
             """, unsafe_allow_html=True)
@@ -409,7 +409,7 @@ if run_button:
 
             # ---- Tabbed detail views ----
             tab_start, tab_rank, tab_charts, tab_confidence = st.tabs(
-                ["📍 Where to start", "📊 Everything, ranked", "📈 The shape of it", "🔍 How sure am I"]
+                ["📍 Where to Start", "📊 Full Ranking", "📈 Visual Breakdown", "🔍 Confidence Check"]
             )
 
             with tab_start:
